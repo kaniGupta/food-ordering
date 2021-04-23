@@ -47,35 +47,43 @@ public class RestaurantService {
         return responseList;
     }
 
+    public RestaurantDetailsResponse getRestaurantByName(final String restaurantName) {
+        log.debug("Fetch Restaurant By Name.");
+        final Restaurant restaurant = restaurantDao.getRestaurantByName(restaurantName);
+        return getRestaurantDetailsResponse(restaurant);
+    }
+
     private RestaurantDetailsResponse getRestaurantDetailsResponse(final Restaurant restaurant) {
         final RestaurantDetailsResponse response = new RestaurantDetailsResponse();
-        final Address address = restaurant.getAddress();
-        if (null != address && null != address.getId()) {
-            final Integer id = restaurant.getAddress().getId();
-            final State state = stateDao.getStateById(id);
+        if (null != restaurant) {
+            final Address address = restaurant.getAddress();
+            if (null != address && null != address.getId()) {
+                final Integer id = restaurant.getAddress().getId();
+                final State state = stateDao.getStateById(id);
 
-            final RestaurantDetailsResponseAddress responseAddress = new RestaurantDetailsResponseAddress();
-            final RestaurantDetailsResponseAddressState responseState =
-                    new RestaurantDetailsResponseAddressState();
+                final RestaurantDetailsResponseAddress responseAddress = new RestaurantDetailsResponseAddress();
+                final RestaurantDetailsResponseAddressState responseState =
+                        new RestaurantDetailsResponseAddressState();
 
-            responseState.setId(state.getUuid());
-            responseState.setStateName(state.getStateName());
+                responseState.setId(state.getUuid());
+                responseState.setStateName(state.getStateName());
 
-            responseAddress.setId(address.getUuid());
-            responseAddress.setFlatBuildingName(address.getFlatBuilNumber());
-            responseAddress.setLocality(address.getLocality());
-            responseAddress.setCity(address.getCity());
-            responseAddress.setPincode(address.getPincode());
-            responseAddress.setState(responseState);
+                responseAddress.setId(address.getUuid());
+                responseAddress.setFlatBuildingName(address.getFlatBuilNumber());
+                responseAddress.setLocality(address.getLocality());
+                responseAddress.setCity(address.getCity());
+                responseAddress.setPincode(address.getPincode());
+                responseAddress.setState(responseState);
 
-            response.setAddress(responseAddress);
+                response.setAddress(responseAddress);
+            }
+            response.setId(restaurant.getUuid());
+            response.setRestaurantName(restaurant.getRestaurantName());
+            response.setPhotoURL(restaurant.getPhotoUrl());
+            response.setCustomerRating(restaurant.getCustomerRating());
+            response.setAveragePrice(restaurant.getAveragePriceForTwo());
+            response.setNumberCustomersRated(restaurant.getNumberOfCustomersRated());
         }
-        response.setId(restaurant.getUuid());
-        response.setRestaurantName(restaurant.getRestaurantName());
-        response.setPhotoURL(restaurant.getPhotoUrl());
-        response.setCustomerRating(restaurant.getCustomerRating());
-        response.setAveragePrice(restaurant.getAveragePriceForTwo());
-        response.setNumberCustomersRated(restaurant.getNumberOfCustomersRated());
         return response;
     }
 }

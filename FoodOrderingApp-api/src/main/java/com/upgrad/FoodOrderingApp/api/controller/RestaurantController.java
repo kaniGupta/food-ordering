@@ -50,8 +50,13 @@ public class RestaurantController {
     }
 
     @GetMapping("/name/{restaurant_name}")
-    public String getRestaurantsByName(@PathVariable("restaurant_name") final String restaurantName) {
-        return "Welcome";
+    public ResponseEntity<RestaurantDetailsResponse> getRestaurantsByName(
+            @PathVariable("restaurant_name") final String restaurantName) {
+        final com.upgrad.FoodOrderingApp.service.beans.RestaurantDetailsResponse restaurant =
+                restaurantService.getRestaurantByName(restaurantName);
+        final RestaurantDetailsResponse response =
+                restaurantMapper.mapRestaurantDetailsResponse(restaurant);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/category/{category_id}")
