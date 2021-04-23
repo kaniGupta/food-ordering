@@ -43,13 +43,19 @@ public class RestaurantService {
                 responseList.add(response);
             });
         }
-
+        log.debug("Total number of restaurants fetched : {}", responseList.size());
         return responseList;
     }
 
     public RestaurantDetailsResponse getRestaurantByName(final String restaurantName) {
         log.debug("Fetch Restaurant By Name.");
         final Restaurant restaurant = restaurantDao.getRestaurantByName(restaurantName);
+        return getRestaurantDetailsResponse(restaurant);
+    }
+
+    public RestaurantDetailsResponse getRestaurantByUuid(final String uuid) {
+        log.debug("Fetch Restaurant By Uuid.");
+        final Restaurant restaurant = restaurantDao.getRestaurantByUuid(uuid);
         return getRestaurantDetailsResponse(restaurant);
     }
 

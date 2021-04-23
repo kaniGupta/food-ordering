@@ -52,6 +52,7 @@ public class RestaurantController {
     @GetMapping("/name/{restaurant_name}")
     public ResponseEntity<RestaurantDetailsResponse> getRestaurantsByName(
             @PathVariable("restaurant_name") final String restaurantName) {
+        log.debug("Get restaurant by name {}.", restaurantName);
         final com.upgrad.FoodOrderingApp.service.beans.RestaurantDetailsResponse restaurant =
                 restaurantService.getRestaurantByName(restaurantName);
         final RestaurantDetailsResponse response =
@@ -65,8 +66,14 @@ public class RestaurantController {
     }
 
     @GetMapping("/{restaurant_id}")
-    public String getRestaurantsByRestaurantId(@PathVariable("restaurant_id") final String restaurantId) {
-        return "Welcome";
+    public ResponseEntity<RestaurantDetailsResponse> getRestaurantsByRestaurantId(
+            @PathVariable("restaurant_id") final String restaurantId) {
+        log.debug("Get restaurant by Uuid {}.", restaurantId);
+        final com.upgrad.FoodOrderingApp.service.beans.RestaurantDetailsResponse restaurant =
+                restaurantService.getRestaurantByUuid(restaurantId);
+        final RestaurantDetailsResponse response =
+                restaurantMapper.mapRestaurantDetailsResponse(restaurant);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{restaurant_id}")

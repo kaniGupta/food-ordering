@@ -32,4 +32,14 @@ public class RestaurantDao {
             return null;
         }
     }
+
+    public Restaurant getRestaurantByUuid(final String uuid) {
+        try {
+            return entityManager.createNamedQuery("getRestaurantsByUuid", Restaurant.class)
+                                .setParameter("uuid", uuid)
+                                .getSingleResult();
+        } catch (final NoResultException nre) {
+            return null;
+        }
+    }
 }

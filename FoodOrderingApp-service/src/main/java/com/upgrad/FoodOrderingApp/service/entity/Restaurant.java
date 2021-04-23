@@ -21,7 +21,9 @@ import java.util.UUID;
 @NamedQueries({
                       @NamedQuery(name = "allRestaurants", query = "select r from Restaurant r"),
                       @NamedQuery(name = "getRestaurantsByName",
-                                  query = "select r from Restaurant r where r.restaurantName =:restaurantName")
+                                  query = "select r from Restaurant r where r.restaurantName =:restaurantName"),
+                      @NamedQuery(name = "getRestaurantsByUuid",
+                                  query = "select r from Restaurant r where r.uuid =:uuid")
               })
 public class Restaurant implements Serializable {
     private static final long serialVersionUID = 7449929436134115185L;
