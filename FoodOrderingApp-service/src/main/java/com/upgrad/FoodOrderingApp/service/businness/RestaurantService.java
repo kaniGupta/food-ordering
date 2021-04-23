@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class RestaurantService {
@@ -53,7 +54,7 @@ public class RestaurantService {
         return getRestaurantDetailsResponse(restaurant);
     }
 
-    public RestaurantDetailsResponse getRestaurantByUuid(final String uuid) {
+    public RestaurantDetailsResponse getRestaurantByUuid(final UUID uuid) {
         log.debug("Fetch Restaurant By Uuid.");
         final Restaurant restaurant = restaurantDao.getRestaurantByUuid(uuid);
         return getRestaurantDetailsResponse(restaurant);

@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class RestaurantDao {
@@ -33,7 +34,7 @@ public class RestaurantDao {
         }
     }
 
-    public Restaurant getRestaurantByUuid(final String uuid) {
+    public Restaurant getRestaurantByUuid(final UUID uuid) {
         try {
             return entityManager.createNamedQuery("getRestaurantsByUuid", Restaurant.class)
                                 .setParameter("uuid", uuid)
