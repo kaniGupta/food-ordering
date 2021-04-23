@@ -1,6 +1,15 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -10,14 +19,21 @@ import java.util.Objects;
 @Entity
 @Table(name = "customer_auth")
 @NamedQueries({
-        @NamedQuery(name = "customerAuthByAccessToken", query = "select ct from CustomerAuthEntity ct where ct.accessToken = :accessToken ")
-})
+                      @NamedQuery(name = "customerAuthByAccessToken",
+                                  query = "select ct from CustomerAuthEntity ct where ct.accessToken = :accessToken ")
+              })
 public class CustomerAuthEntity implements Serializable {
+    private static final long serialVersionUID = 6431283291963697444L;
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CustomerAuthEntity)) return false;
-        CustomerAuthEntity that = (CustomerAuthEntity) o;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof CustomerAuthEntity)) {
+            return false;
+        }
+        final CustomerAuthEntity that = (CustomerAuthEntity) o;
         return id.equals(that.id) && uuid.equals(that.uuid);
     }
 
@@ -37,7 +53,7 @@ public class CustomerAuthEntity implements Serializable {
     private String uuid;
 
     @ManyToOne
-    @JoinColumn(name="CUSTOMER_ID")
+    @JoinColumn(name = "CUSTOMER_ID")
     private CustomerEntity customer;
 
     @Column(name = "ACCESS_TOKEN")
@@ -60,7 +76,7 @@ public class CustomerAuthEntity implements Serializable {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(final Integer id) {
         this.id = id;
     }
 
@@ -68,7 +84,7 @@ public class CustomerAuthEntity implements Serializable {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(final String uuid) {
         this.uuid = uuid;
     }
 
@@ -76,7 +92,7 @@ public class CustomerAuthEntity implements Serializable {
         return customer;
     }
 
-    public void setCustomer(CustomerEntity customer) {
+    public void setCustomer(final CustomerEntity customer) {
         this.customer = customer;
     }
 
@@ -84,7 +100,7 @@ public class CustomerAuthEntity implements Serializable {
         return accessToken;
     }
 
-    public void setAccessToken(String accessToken) {
+    public void setAccessToken(final String accessToken) {
         this.accessToken = accessToken;
     }
 
@@ -92,7 +108,7 @@ public class CustomerAuthEntity implements Serializable {
         return expiresAt;
     }
 
-    public void setExpiresAt(ZonedDateTime expiresAt) {
+    public void setExpiresAt(final ZonedDateTime expiresAt) {
         this.expiresAt = expiresAt;
     }
 
@@ -100,7 +116,7 @@ public class CustomerAuthEntity implements Serializable {
         return loginAt;
     }
 
-    public void setLoginAt(ZonedDateTime loginAt) {
+    public void setLoginAt(final ZonedDateTime loginAt) {
         this.loginAt = loginAt;
     }
 
@@ -108,7 +124,9 @@ public class CustomerAuthEntity implements Serializable {
         return logoutAt;
     }
 
-    public void setLogoutAt(ZonedDateTime logoutAt) {
+    public void setLogoutAt(final ZonedDateTime logoutAt) {
         this.logoutAt = logoutAt;
     }
+
+
 }

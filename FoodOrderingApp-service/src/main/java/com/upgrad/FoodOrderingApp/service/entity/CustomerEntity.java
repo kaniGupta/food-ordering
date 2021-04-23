@@ -1,6 +1,13 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -13,12 +20,13 @@ import java.util.Objects;
         {
                 @NamedQuery(name = "customerByUuid", query = "select c from CustomerEntity c where c.uuid = :uuid"),
                 @NamedQuery(name = "customerByEmail", query = "select c from CustomerEntity c where c.email =:email"),
-                @NamedQuery(name = "customerByContactNumber", query = "select c from CustomerEntity c where c.contactNumber =:contactNumber"),
-
+                @NamedQuery(name = "customerByContactNumber",
+                            query = "select c from CustomerEntity c where c.contactNumber =:contactNumber"),
         }
 )
 public class CustomerEntity implements Serializable {
 
+    private static final long serialVersionUID = -240597140638746842L;
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +51,7 @@ public class CustomerEntity implements Serializable {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(final Integer id) {
         this.id = id;
     }
 
@@ -51,7 +59,7 @@ public class CustomerEntity implements Serializable {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(final String uuid) {
         this.uuid = uuid;
     }
 
@@ -59,7 +67,7 @@ public class CustomerEntity implements Serializable {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public void setFirstName(final String firstName) {
         this.firstName = firstName;
     }
 
@@ -67,7 +75,7 @@ public class CustomerEntity implements Serializable {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public void setLastName(final String lastName) {
         this.lastName = lastName;
     }
 
@@ -75,7 +83,7 @@ public class CustomerEntity implements Serializable {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(final String email) {
         this.email = email;
     }
 
@@ -83,7 +91,7 @@ public class CustomerEntity implements Serializable {
         return contactNumber;
     }
 
-    public void setContactNumber(String contactNumber) {
+    public void setContactNumber(final String contactNumber) {
         this.contactNumber = contactNumber;
     }
 
@@ -91,7 +99,7 @@ public class CustomerEntity implements Serializable {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
@@ -99,7 +107,7 @@ public class CustomerEntity implements Serializable {
         return salt;
     }
 
-    public void setSalt(String salt) {
+    public void setSalt(final String salt) {
         this.salt = salt;
     }
 
@@ -124,10 +132,14 @@ public class CustomerEntity implements Serializable {
     private String salt;
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CustomerEntity)) return false;
-        CustomerEntity that = (CustomerEntity) o;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof CustomerEntity)) {
+            return false;
+        }
+        final CustomerEntity that = (CustomerEntity) o;
         return id.equals(that.id) && uuid.equals(that.uuid);
     }
 
