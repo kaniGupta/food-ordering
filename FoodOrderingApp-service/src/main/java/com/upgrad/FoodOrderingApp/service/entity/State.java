@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -12,6 +14,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "state")
+@NamedQueries({
+                      @NamedQuery(name = "stateById",
+                                  query = "select s from State s where s.id = :id"),
+              })
 public class State implements Serializable {
     private static final long serialVersionUID = -4881592165270352456L;
 
@@ -80,5 +86,14 @@ public class State implements Serializable {
         result = 31 * result + getUuid().hashCode();
         result = 31 * result + getStateName().hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "State{" +
+               "id=" + id +
+               ", uuid='" + uuid + '\'' +
+               ", stateName='" + stateName + '\'' +
+               '}';
     }
 }

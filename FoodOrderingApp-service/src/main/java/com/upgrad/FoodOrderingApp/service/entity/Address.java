@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -14,6 +16,11 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "address")
+@NamedQueries({
+                      @NamedQuery(name = "addressById",
+                                  query = "select a from Address a where a.id = :id"),
+              })
+
 public class Address implements Serializable {
 
     private static final long serialVersionUID = -3318717135185330458L;

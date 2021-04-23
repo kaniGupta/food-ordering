@@ -28,8 +28,10 @@ public class RestaurantController {
     @GetMapping
     public List<RestaurantDetailsResponse> getRestaurants() {
         log.debug("Get all restaurants.");
-         restaurantService.getRestaurants();
-         return null;
+        final com.upgrad.FoodOrderingApp.service.beans.RestaurantDetailsResponse restaurants =
+                restaurantService.getRestaurants();
+
+        return null;
     }
 
     @GetMapping("/name/{restaurant_name}")

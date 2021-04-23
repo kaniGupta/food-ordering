@@ -2,10 +2,11 @@ package com.upgrad.FoodOrderingApp.service.beans;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public class RestaurantDetailsResponse {
 
-    private String id;
+    private UUID id;
 
     private String restaurantName;
 
@@ -21,11 +22,11 @@ public class RestaurantDetailsResponse {
 
     private List<CategoryList> categories;
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(final String id) {
+    public void setId(final UUID id) {
         this.id = id;
     }
 
