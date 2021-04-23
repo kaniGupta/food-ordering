@@ -32,4 +32,13 @@ public class CategoryList {
     public void setItemList(final List<ItemList> itemList) {
         this.itemList = itemList;
     }
+
+    @Override
+    public String toString() {
+        return "CategoryList{" +
+               "id=" + id +
+               ", categoryName='" + categoryName + '\'' +
+               ", itemList=" + itemList +
+               '}';
+    }
 }

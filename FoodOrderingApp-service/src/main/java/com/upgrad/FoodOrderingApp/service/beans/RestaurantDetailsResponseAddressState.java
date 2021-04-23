@@ -22,4 +22,12 @@ public class RestaurantDetailsResponseAddressState {
     public void setStateName(final String stateName) {
         this.stateName = stateName;
     }
+
+    @Override
+    public String toString() {
+        return "RestaurantDetailsResponseAddressState{" +
+               "id=" + id +
+               ", stateName='" + stateName + '\'' +
+               '}';
+    }
 }

@@ -85,4 +85,18 @@ public class RestaurantDetailsResponse {
     public void setCategories(final List<CategoryList> categories) {
         this.categories = categories;
     }
+
+    @Override
+    public String toString() {
+        return "RestaurantDetailsResponse{" +
+               "id=" + id +
+               ", restaurantName='" + restaurantName + '\'' +
+               ", photoURL='" + photoURL + '\'' +
+               ", customerRating=" + customerRating +
+               ", averagePrice=" + averagePrice +
+               ", numberCustomersRated=" + numberCustomersRated +
+               ", address=" + address +
+               ", categories=" + categories +
+               '}';
+    }
 }

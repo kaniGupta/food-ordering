@@ -63,4 +63,16 @@ public class RestaurantDetailsResponseAddress {
     public void setState(final RestaurantDetailsResponseAddressState state) {
         this.state = state;
     }
+
+    @Override
+    public String toString() {
+        return "RestaurantDetailsResponseAddress{" +
+               "id=" + id +
+               ", flatBuildingName='" + flatBuildingName + '\'' +
+               ", locality='" + locality + '\'' +
+               ", city='" + city + '\'' +
+               ", pincode='" + pincode + '\'' +
+               ", state=" + state +
+               '}';
+    }
 }

@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.UUID;
 
 @Entity
 @Table(name = "state")
@@ -29,7 +30,7 @@ public class State implements Serializable {
     @Column(name = "uuid")
     @NotNull
     @Size(max = 200)
-    private String uuid;
+    private UUID uuid;
 
     @Column(name = "state_name")
     @NotNull
@@ -44,11 +45,11 @@ public class State implements Serializable {
         this.id = id;
     }
 
-    public String getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 
-    public void setUuid(final String uuid) {
+    public void setUuid(final UUID uuid) {
         this.uuid = uuid;
     }
 

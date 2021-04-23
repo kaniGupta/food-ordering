@@ -33,4 +33,13 @@ public class ItemList {
     public void setPrice(final Integer price) {
         this.price = price;
     }
+
+    @Override
+    public String toString() {
+        return "ItemList{" +
+               "id=" + id +
+               ", itemName='" + itemName + '\'' +
+               ", price=" + price +
+               '}';
+    }
 }
