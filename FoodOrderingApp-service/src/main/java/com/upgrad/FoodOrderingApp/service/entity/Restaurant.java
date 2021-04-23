@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -15,6 +17,9 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "restaurant")
+@NamedQueries({
+                      @NamedQuery(name = "allRestaurants", query = "select r from Restaurant r")
+              })
 public class Restaurant implements Serializable {
     private static final long serialVersionUID = 7449929436134115185L;
 
@@ -167,5 +172,19 @@ public class Restaurant implements Serializable {
         result = 31 * result + (getNumberOfCustomersRated() != null ? getNumberOfCustomersRated().hashCode() : 0);
         result = 31 * result + (getAddress() != null ? getAddress().hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+               "id=" + id +
+               ", uuid='" + uuid + '\'' +
+               ", restaurantName='" + restaurantName + '\'' +
+               ", photoUrl='" + photoUrl + '\'' +
+               ", customerRating=" + customerRating +
+               ", averagePriceForTwo=" + averagePriceForTwo +
+               ", numberOfCustomersRated=" + numberOfCustomersRated +
+               ", address=" + address +
+               '}';
     }
 }
