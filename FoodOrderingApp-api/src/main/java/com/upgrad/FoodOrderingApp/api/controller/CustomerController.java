@@ -4,12 +4,15 @@ import com.upgrad.FoodOrderingApp.api.model.LoginResponse;
 import com.upgrad.FoodOrderingApp.api.model.LogoutResponse;
 import com.upgrad.FoodOrderingApp.api.model.SignupCustomerRequest;
 import com.upgrad.FoodOrderingApp.api.model.SignupCustomerResponse;
+import com.upgrad.FoodOrderingApp.api.model.UpdateCustomerRequest;
+import com.upgrad.FoodOrderingApp.api.model.UpdateCustomerResponse;
 import com.upgrad.FoodOrderingApp.service.businness.CustomerBusinessService;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
+import com.upgrad.FoodOrderingApp.service.exception.UpdateCustomerException;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.ArrayList;
@@ -92,6 +95,24 @@ public class CustomerController {
         LogoutResponse logoutResponse = new LogoutResponse().id(customer.getUuid())
                                             .message("LOGGED OUT SUCCESSFULLY");
         return new ResponseEntity<LogoutResponse>(logoutResponse, HttpStatus.OK);
+    }
+    
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "CUSTOMER DETAILS UPDATED SUCCESSFULLY"),
+    })
+    @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<UpdateCustomerResponse> update(@RequestHeader("authorization") final String authorization,
+        @RequestBody(required = false) final UpdateCustomerRequest updateCustomerRequest)
+        throws SignUpRestrictedException, AuthorizationFailedException, UpdateCustomerException {
+        final CustomerEntity customerEntity = new CustomerEntity();
+        customerEntity.setUuid(UUID.randomUUID().toString());
+        customerEntity.setFirstName(updateCustomerRequest.getFirstName());
+        customerEntity.setLastName(updateCustomerRequest.getLastName());
+        final CustomerEntity updatedCustomerEntity = customerBusinessService.update(authorization, customerEntity);
+        UpdateCustomerResponse customerResponse = new UpdateCustomerResponse().id(updatedCustomerEntity.getUuid()).firstName(updatedCustomerEntity.getFirstName()).
+                                                                                                                                                                      lastName(updatedCustomerEntity.getLastName())
+                                                      .status("CUSTOMER DETAILS UPDATED SUCCESSFULLY");
+        return new ResponseEntity<UpdateCustomerResponse>(customerResponse, HttpStatus.OK);
     }
     
 }
