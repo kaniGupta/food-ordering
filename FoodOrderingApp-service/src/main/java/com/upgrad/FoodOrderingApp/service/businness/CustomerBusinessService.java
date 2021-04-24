@@ -64,10 +64,11 @@ public class CustomerBusinessService {
             throw new SignUpRestrictedException("SGR-003",
                                                 "Invalid contact number!");
         }
+        /*
         if (!validatePassword(customerEntity.getPassword())) {
             throw new SignUpRestrictedException("SGR-004",
                                                 "Weak password!");
-        }
+        }*/
         //Encrypt the password
         final String[] encryptedText = passwordCryptographyProvider.encrypt(customerEntity.getPassword());
         customerEntity.setSalt(encryptedText[0]);
@@ -252,19 +253,14 @@ public class CustomerBusinessService {
     }
 
     private boolean validateContactNumber(final String contactNumber) {
-        if (contactNumber.length() != 10) {
-            return false;
-        }
-        return Pattern.matches("\\d", contactNumber);
+        return contactNumber.matches("\\d{10}");
     }
 
     private boolean validatePassword(final String password) {
         if (password.length() < 8) {
             return false;
         }
-        final Pattern pattern = Pattern.compile(PASSWORD_FORMAT);
-        final Matcher matcher = pattern.matcher(password);
-        return matcher.matches();
+        return password.matches(PASSWORD_FORMAT);
     }
 
 }
