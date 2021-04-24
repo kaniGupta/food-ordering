@@ -122,7 +122,7 @@ public class CustomerController {
     })
     @RequestMapping(method = RequestMethod.PUT, path = "/password", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UpdatePasswordResponse> changePassword(@RequestHeader("authorization") final String authorization,
-        final UpdatePasswordRequest updatePasswordRequest)
+        @RequestBody(required = false) final UpdatePasswordRequest updatePasswordRequest)
         throws SignUpRestrictedException, AuthorizationFailedException, UpdateCustomerException {
         final CustomerEntity updatedCustomerEntity = customerBusinessService.updatePassword(authorization, updatePasswordRequest.getOldPassword(), updatePasswordRequest.getNewPassword());
         UpdatePasswordResponse passwordResponse = new UpdatePasswordResponse().id(updatedCustomerEntity.getUuid()).status("CUSTOMER PASSWORD UPDATED SUCCESSFULLY");
