@@ -26,9 +26,25 @@ public class AddressDao {
         }
     }
     
+    @Transactional
+    public Address getAddressByUuid(final String uuid) {
+        try {
+            return entityManager.createNamedQuery("addressByUuid", Address.class)
+                       .setParameter("uuid", uuid)
+                       .getSingleResult();
+        } catch (final NoResultException nre) {
+            return null;
+        }
+    }
+    
     @Transactional(propagation = Propagation.REQUIRED)
     public Address createAddress(Address address) {
         entityManager.persist(address);
         return address;
+    }
+    
+    @Transactional
+    public void deleteAddress(Address address) {
+        entityManager.remove(address);
     }
 }

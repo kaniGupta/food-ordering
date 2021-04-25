@@ -8,7 +8,7 @@ import com.upgrad.FoodOrderingApp.api.model.UpdateCustomerRequest;
 import com.upgrad.FoodOrderingApp.api.model.UpdateCustomerResponse;
 import com.upgrad.FoodOrderingApp.api.model.UpdatePasswordRequest;
 import com.upgrad.FoodOrderingApp.api.model.UpdatePasswordResponse;
-import com.upgrad.FoodOrderingApp.service.businness.CustomerBusinessService;
+import com.upgrad.FoodOrderingApp.service.businness.CustomerService;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuth;
 import com.upgrad.FoodOrderingApp.service.entity.Customer;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
@@ -36,11 +36,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/customer")
 public class CustomerController {
     
-    private final CustomerBusinessService customerBusinessService;
+    private final CustomerService customerService;
     
     @Autowired
-    public CustomerController(final CustomerBusinessService customerBusinessService) {
-        this.customerBusinessService = customerBusinessService;
+    public CustomerController(final CustomerService customerService) {
+        this.customerService = customerService;
     }
     
     @ApiResponses(value = {
@@ -59,7 +59,7 @@ public class CustomerController {
         customer.setEmail(signupCustomerRequest.getEmailAddress());
         customer.setPassword(signupCustomerRequest.getPassword());
         customer.setContactNumber(signupCustomerRequest.getContactNumber());
-        final Customer createdCustomer = customerBusinessService
+        final Customer createdCustomer = customerService
                                                          .createCustomer(customer);
         SignupCustomerResponse customerResponse = new SignupCustomerResponse()
                                                       .id(createdCustomer.getUuid())
@@ -71,7 +71,7 @@ public class CustomerController {
     public ResponseEntity<LoginResponse> login(
         @RequestHeader("authorization") final String authorization)
         throws AuthenticationFailedException {
-        CustomerAuth customerAuthToken = customerBusinessService
+        CustomerAuth customerAuthToken = customerService
                                                    .login(authorization);
         Customer customer = customerAuthToken.getCustomer();
         LoginResponse loginResponse = new LoginResponse().id(customer.getUuid())
@@ -92,7 +92,7 @@ public class CustomerController {
     public ResponseEntity<LogoutResponse> logout(
         @RequestHeader("authorization") final String authorization)
         throws AuthorizationFailedException {
-        CustomerAuth customerAuthToken = customerBusinessService.logout(authorization);
+        CustomerAuth customerAuthToken = customerService.logout(authorization);
         Customer customer = customerAuthToken.getCustomer();
         LogoutResponse logoutResponse = new LogoutResponse().id(customer.getUuid())
                                             .message("LOGGED OUT SUCCESSFULLY");
@@ -110,7 +110,7 @@ public class CustomerController {
         customer.setUuid(UUID.randomUUID().toString());
         customer.setFirstName(updateCustomerRequest.getFirstName());
         customer.setLastName(updateCustomerRequest.getLastName());
-        final Customer updatedCustomer = customerBusinessService.update(authorization, customer);
+        final Customer updatedCustomer = customerService.update(authorization, customer);
         UpdateCustomerResponse customerResponse = new UpdateCustomerResponse().id(updatedCustomer.getUuid()).firstName(
             updatedCustomer.getFirstName()).
                                                                                                                                                                       lastName(
@@ -127,7 +127,8 @@ public class CustomerController {
     public ResponseEntity<UpdatePasswordResponse> changePassword(@RequestHeader("authorization") final String authorization,
         @RequestBody(required = false) final UpdatePasswordRequest updatePasswordRequest)
         throws SignUpRestrictedException, AuthorizationFailedException, UpdateCustomerException {
-        final Customer updatedCustomer = customerBusinessService.updatePassword(authorization, updatePasswordRequest.getOldPassword(), updatePasswordRequest.getNewPassword());
+        final Customer updatedCustomer = customerService
+                                             .updatePassword(authorization, updatePasswordRequest.getOldPassword(), updatePasswordRequest.getNewPassword());
         UpdatePasswordResponse passwordResponse = new UpdatePasswordResponse().id(updatedCustomer.getUuid()).status("CUSTOMER PASSWORD UPDATED SUCCESSFULLY");
         return new ResponseEntity<UpdatePasswordResponse>(passwordResponse, HttpStatus.OK);
     }
