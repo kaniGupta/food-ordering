@@ -14,7 +14,7 @@ public class CategoryDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<Category> getAllRestaurants() {
+    public List<Category> getAllCategories() {
         try {
             return entityManager.createNamedQuery("allCategory", Category.class)
                                 .getResultList();
