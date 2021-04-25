@@ -18,7 +18,7 @@ import java.io.Serializable;
                       @NamedQuery(name = "stateById",
                                   query = "select s from State s where s.id = :id"),
                       @NamedQuery(name = "stateByUuid",
-                                  query = "select s from State s where s.uuid = :uuid"),
+                                  query = "select s from State s where s.uuid = :uuid")
               })
 public class State implements Serializable {
     private static final long serialVersionUID = -4881592165270352456L;
