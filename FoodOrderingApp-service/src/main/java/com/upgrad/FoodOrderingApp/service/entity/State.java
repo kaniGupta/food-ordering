@@ -18,6 +18,8 @@ import java.util.UUID;
 @NamedQueries({
                       @NamedQuery(name = "stateById",
                                   query = "select s from State s where s.id = :id"),
+    @NamedQuery(name = "stateByUuid",
+        query = "select s from State s where s.uuid = :uuid"),
               })
 public class State implements Serializable {
     private static final long serialVersionUID = -4881592165270352456L;
@@ -30,7 +32,7 @@ public class State implements Serializable {
     @Column(name = "uuid")
     @NotNull
     @Size(max = 200)
-    private UUID uuid;
+    private String uuid;
 
     @Column(name = "state_name")
     @NotNull
@@ -45,11 +47,11 @@ public class State implements Serializable {
         this.id = id;
     }
 
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(final UUID uuid) {
+    public void setUuid(final String uuid) {
         this.uuid = uuid;
     }
 
