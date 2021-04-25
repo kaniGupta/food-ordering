@@ -82,6 +82,37 @@ public class AddressBusinessService {
        return customer.getAddresses();
     }
     
+    public Address deleteAddress(String accessToken,String uuid)
+        throws AuthorizationFailedException, AddressNotFoundException {
+        final CustomerAuth customerAuth = customerDao.getCustomerAuthToken(accessToken);
+        if (customerAuth == null) {
+            throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in");
+        }
+        final ZonedDateTime now = ZonedDateTime.now();
+        if (customerAuth.getLogoutAt() != null) {
+            throw new AuthorizationFailedException("ATHR-002",
+                "Customer is logged out. Log in again to access this endpoint.");
+        }
+        if (customerAuth.getExpiresAt().compareTo(now) <= 0) {
+            throw new AuthorizationFailedException("ATHR-003",
+                "Your session is expired. Log in again to access this endpoint.");
+        }
+        if(uuid == null || StringUtils.isEmpty(uuid)) {
+            throw new AddressNotFoundException("ANF-005","Address id can not be empty");
+        }
+        Address address = addressDao.getAddressByUuid(uuid);
+        if(address == null){
+            throw new AddressNotFoundException("ANF-003","No address by this id");
+        }
+        Customer customer = customerAuth.getCustomer();
+        if(!address.getCustomers().contains(customer)) {
+            throw new AuthorizationFailedException("ATHR-004",
+                "You are not authorized to view/update/delete any one else's address");
+        }
+        addressDao.deleteAddress(address);
+        return address;
+    }
+    
     
     private boolean validateAddressRequest(Address address,String stateId) {
         if (address == null) {
