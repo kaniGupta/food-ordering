@@ -11,6 +11,7 @@ import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
 import java.time.ZonedDateTime;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,11 +55,33 @@ public class AddressBusinessService {
         }
         Customer customer = customerAuth.getCustomer();
         address.setState(state);
+        address.setActive(1);
         if(!address.getCustomers().contains(customer)) {
             address.getCustomers().add(customer);
         }
         return addressDao.createAddress(address);
     }
+    
+    
+    public List<Address> getAllAddressesOfCustomer(final String accessToken)
+        throws AuthorizationFailedException, SaveAddressException, AddressNotFoundException {
+        final CustomerAuth customerAuth = customerDao.getCustomerAuthToken(accessToken);
+        if (customerAuth == null) {
+            throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in");
+        }
+        final ZonedDateTime now = ZonedDateTime.now();
+        if (customerAuth.getLogoutAt() != null) {
+            throw new AuthorizationFailedException("ATHR-002",
+                "Customer is logged out. Log in again to access this endpoint.");
+        }
+        if (customerAuth.getExpiresAt().compareTo(now) <= 0) {
+            throw new AuthorizationFailedException("ATHR-003",
+                "Your session is expired. Log in again to access this endpoint.");
+        }
+       Customer customer = customerAuth.getCustomer();
+       return customer.getAddresses();
+    }
+    
     
     private boolean validateAddressRequest(Address address,String stateId) {
         if (address == null) {

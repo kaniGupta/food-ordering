@@ -27,8 +27,7 @@ import java.util.Objects;
         {
                 @NamedQuery(name = "customerByUuid", query = "select c from Customer c where c.uuid = :uuid"),
                 @NamedQuery(name = "customerByEmail", query = "select c from Customer c where c.email =:email"),
-                @NamedQuery(name = "customerByContactNumber",
-                            query = "select c from Customer c where c.contactNumber =:contactNumber"),
+                @NamedQuery(name = "customerByContactNumber", query = "select c from Customer c where c.contactNumber =:contactNumber"),
         }
 )
 public class Customer implements Serializable {
@@ -138,10 +137,9 @@ public class Customer implements Serializable {
     @Size(max = 200)
     private String salt;
     
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinTable(name = "CUSTOMER_ADDRESS",
-        joinColumns = @JoinColumn(name = "CUSTOMER_ID"),
-        inverseJoinColumns = @JoinColumn(name = "ADDRESS_ID"))
+    @ManyToMany(targetEntity = Address.class,mappedBy = "customers",cascade =  {
+        CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH
+    })
     private List<Address> addresses = new ArrayList<>();
     
     public List<Address> getAddresses() {

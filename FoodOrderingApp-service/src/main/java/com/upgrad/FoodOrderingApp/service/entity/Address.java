@@ -2,6 +2,7 @@ package com.upgrad.FoodOrderingApp.service.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -72,7 +74,12 @@ public class Address implements Serializable {
     @Column(name = "active")
     private Integer active;
     
-    @ManyToMany(mappedBy = "addresses", fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = Customer.class, cascade = {
+        CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH
+    })
+    @JoinTable(name = "CUSTOMER_ADDRESS",
+        joinColumns = @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID"),
+        inverseJoinColumns = @JoinColumn(name = "CUSTOMER_ID" , referencedColumnName = "ID"))
     private List<Customer> customers = new ArrayList<>();
     
     
