@@ -68,7 +68,7 @@ public class RestaurantController {
 
     @GetMapping("/{restaurant_id}")
     public ResponseEntity<RestaurantDetailsResponse> getRestaurantsByRestaurantId(
-            @PathVariable("restaurant_id") final UUID restaurantId) {
+            @PathVariable("restaurant_id") final String restaurantId) {
         log.debug("Get restaurant by Uuid {}.", restaurantId);
         final com.upgrad.FoodOrderingApp.service.beans.RestaurantDetailsResponse restaurant =
                 restaurantService.getRestaurantByUuid(restaurantId);

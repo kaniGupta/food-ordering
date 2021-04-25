@@ -54,7 +54,7 @@ public class RestaurantService {
         return getRestaurantDetailsResponse(restaurant);
     }
 
-    public RestaurantDetailsResponse getRestaurantByUuid(final UUID uuid) {
+    public RestaurantDetailsResponse getRestaurantByUuid(final String uuid) {
         log.debug("Fetch Restaurant By Uuid.");
         final Restaurant restaurant = restaurantDao.getRestaurantByUuid(uuid);
         return getRestaurantDetailsResponse(restaurant);

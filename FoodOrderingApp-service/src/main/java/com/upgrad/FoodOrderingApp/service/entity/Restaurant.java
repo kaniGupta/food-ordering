@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Entity
 @Table(name = "restaurant")
@@ -36,7 +35,7 @@ public class Restaurant implements Serializable {
     @Column(name = "uuid")
     @NotNull
     @Size(max = 200)
-    private UUID uuid;
+    private String uuid;
 
     @Column(name = "restaurant_name")
     @Size(max = 50)
@@ -70,11 +69,11 @@ public class Restaurant implements Serializable {
         this.id = id;
     }
 
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(final UUID uuid) {
+    public void setUuid(final String uuid) {
         this.uuid = uuid;
     }
 

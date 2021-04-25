@@ -5,28 +5,20 @@ import java.util.List;
 import java.util.UUID;
 
 public class RestaurantDetailsResponse {
-
-    private UUID id;
-
+    private String id;
     private String restaurantName;
-
     private String photoURL;
-
     private BigDecimal customerRating;
-
     private Integer averagePrice;
-
     private Integer numberCustomersRated;
-
     private RestaurantDetailsResponseAddress address;
-
     private List<CategoryList> categories;
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(final UUID id) {
+    public void setId(final String id) {
         this.id = id;
     }
 

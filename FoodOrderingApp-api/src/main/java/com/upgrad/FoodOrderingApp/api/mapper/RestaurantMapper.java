@@ -5,19 +5,21 @@ import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddress;
 import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddressState;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class RestaurantMapper {
 
     public RestaurantDetailsResponse mapRestaurantDetailsResponse(
             final com.upgrad.FoodOrderingApp.service.beans.RestaurantDetailsResponse response) {
         final RestaurantDetailsResponse details = new RestaurantDetailsResponse();
-
-        details.setId(response.getId());
+        details.setId(UUID.fromString(response.getId()));
         details.setRestaurantName(response.getRestaurantName());
         details.setPhotoURL(response.getPhotoURL());
         details.setCustomerRating(response.getCustomerRating());
         details.setAveragePrice(response.getAveragePrice());
         details.setNumberCustomersRated(response.getNumberCustomersRated());
+
         final com.upgrad.FoodOrderingApp.service.beans.RestaurantDetailsResponseAddress responseAddress =
                 response.getAddress();
         if (null != responseAddress) {
@@ -38,7 +40,6 @@ public class RestaurantMapper {
             }
             details.setAddress(address);
         }
-
         return details;
     }
 }
