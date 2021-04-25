@@ -6,9 +6,11 @@ import com.upgrad.FoodOrderingApp.api.model.AddressListState;
 import com.upgrad.FoodOrderingApp.api.model.DeleteAddressResponse;
 import com.upgrad.FoodOrderingApp.api.model.SaveAddressRequest;
 import com.upgrad.FoodOrderingApp.api.model.SaveAddressResponse;
-import com.upgrad.FoodOrderingApp.api.model.UpdateCustomerResponse;
-import com.upgrad.FoodOrderingApp.service.businness.AddressBusinessService;
+import com.upgrad.FoodOrderingApp.api.model.StatesList;
+import com.upgrad.FoodOrderingApp.api.model.StatesListResponse;
+import com.upgrad.FoodOrderingApp.service.businness.AddressService;
 import com.upgrad.FoodOrderingApp.service.entity.Address;
+import com.upgrad.FoodOrderingApp.service.entity.State;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
@@ -17,10 +19,8 @@ import io.swagger.annotations.ApiResponses;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,12 +38,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/address")
 public class AddressController {
     
-    private final AddressBusinessService addressBusinessService;
+    private final AddressService addressService;
     
     @Autowired
     public AddressController(
-        AddressBusinessService addressBusinessService) {
-        this.addressBusinessService = addressBusinessService;
+        AddressService addressService) {
+        this.addressService = addressService;
     }
     
     @ApiResponses(value = {
@@ -60,7 +60,7 @@ public class AddressController {
         address.setFlatBuilNumber(saveAddressRequest.getFlatBuildingName());
         address.setPincode(saveAddressRequest.getPincode());
         address.setUuid(UUID.randomUUID().toString());
-        Address createdAddress = addressBusinessService.save(authorization,address,saveAddressRequest.getStateUuid());
+        Address createdAddress = addressService.save(authorization,address,saveAddressRequest.getStateUuid());
         SaveAddressResponse response = new SaveAddressResponse().id(createdAddress.getUuid().toString()).status("ADDRESS SUCCESSFULLY REGISTERED");
         return new ResponseEntity<SaveAddressResponse>(response, HttpStatus.OK);
     }
@@ -72,7 +72,7 @@ public class AddressController {
     @CrossOrigin
     public ResponseEntity<AddressListResponse> getAllAddresses(@RequestHeader final String authorization)
         throws AuthorizationFailedException, SaveAddressException, AddressNotFoundException {
-        List<Address> addresses = addressBusinessService.getAllAddressesOfCustomer(authorization);
+        List<Address> addresses = addressService.getAllAddressesOfCustomer(authorization);
         
         AddressListResponse response = new AddressListResponse();
         if(addresses == null || CollectionUtils.isEmpty(addresses)) {
@@ -90,10 +90,19 @@ public class AddressController {
     @CrossOrigin
     public ResponseEntity<DeleteAddressResponse> deleteAddress(@RequestHeader final String authorization,@PathVariable final String address_id)
         throws AuthorizationFailedException, AddressNotFoundException {
-        Address deletedAddress = addressBusinessService.deleteAddress(authorization,address_id);
+        Address deletedAddress = addressService.deleteAddress(authorization,address_id);
         DeleteAddressResponse response = new DeleteAddressResponse().id(UUID.fromString(address_id)).status("ADDRESS DELETED SUCCESSFULLY");
         return new ResponseEntity<DeleteAddressResponse>(response, HttpStatus.OK);
     }
+    
+    
+    @RequestMapping(method = RequestMethod.GET,path="/states",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @CrossOrigin
+    public ResponseEntity<StatesListResponse> getAllStates() {
+        List<State> states = addressService.getAllStates();
+        return new ResponseEntity<StatesListResponse>(convertStates(states), HttpStatus.OK);
+    }
+    
     
     private AddressListResponse converListOfAddress(List<Address> addresses) {
         List<AddressList> addressLists = new ArrayList<>();
@@ -124,6 +133,20 @@ public class AddressController {
         response.setAddresses(addressLists);
         return response;
     }
+    
+    private StatesListResponse convertStates(List<State> states){
+        List<StatesList> list = new ArrayList<>();
+        for(State s:states) {
+            StatesList listEntry = new StatesList();
+            listEntry.id(UUID.fromString(s.getUuid()));
+            listEntry.stateName(s.getStateName());
+            list.add(listEntry);
+        }
+        StatesListResponse response = new StatesListResponse();
+        response.states(list);
+        return response;
+    }
+    
     
 }
     

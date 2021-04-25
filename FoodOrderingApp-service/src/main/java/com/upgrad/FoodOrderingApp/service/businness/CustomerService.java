@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class CustomerBusinessService {
+public class CustomerService {
 
     private static final String EMAIL_FORMAT = "^[A-Za-z0-9]+@(.+)$";
     private final CustomerDao customerDao;
@@ -29,7 +29,7 @@ public class CustomerBusinessService {
     private final PasswordCryptographyProvider passwordCryptographyProvider;
 
     @Autowired
-    public CustomerBusinessService(final CustomerDao customerDao, final CustomerAuthDao customerAuthDao, final PasswordCryptographyProvider passwordCryptographyProvider) {
+    public CustomerService(final CustomerDao customerDao, final CustomerAuthDao customerAuthDao, final PasswordCryptographyProvider passwordCryptographyProvider) {
         this.customerDao = customerDao;
         this.customerAuthDao = customerAuthDao;
         this.passwordCryptographyProvider = passwordCryptographyProvider;

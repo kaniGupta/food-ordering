@@ -17,14 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AddressBusinessService {
+public class AddressService {
     
     private final AddressDao addressDao;
     private final CustomerDao customerDao;
     private final StateDao stateDao;
     
     @Autowired
-    public AddressBusinessService(AddressDao addressDao,CustomerDao customerDao,StateDao stateDao) {
+    public AddressService(AddressDao addressDao,CustomerDao customerDao,StateDao stateDao) {
         this.addressDao = addressDao;
         this.customerDao = customerDao;
         this.stateDao = stateDao;
@@ -135,6 +135,10 @@ public class AddressBusinessService {
     
     private boolean validatePinCode(String pinCode) {
         return pinCode.matches("\\d{6}");
+    }
+    
+    public List<State> getAllStates() {
+        return stateDao.getAllStates();
     }
     
     
