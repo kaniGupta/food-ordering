@@ -11,15 +11,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.UUID;
 
 @Entity
 @Table(name = "state")
 @NamedQueries({
                       @NamedQuery(name = "stateById",
                                   query = "select s from State s where s.id = :id"),
-    @NamedQuery(name = "stateByUuid",
-        query = "select s from State s where s.uuid = :uuid"),
+                      @NamedQuery(name = "stateByUuid",
+                                  query = "select s from State s where s.uuid = :uuid"),
               })
 public class State implements Serializable {
     private static final long serialVersionUID = -4881592165270352456L;

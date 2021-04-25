@@ -72,10 +72,10 @@ public class RestaurantService {
                 final RestaurantDetailsResponseAddressState responseState =
                         new RestaurantDetailsResponseAddressState();
 
-                responseState.setId(state.getUuid());
+                responseState.setId(UUID.fromString(state.getUuid()));
                 responseState.setStateName(state.getStateName());
 
-                responseAddress.setId(address.getUuid());
+                responseAddress.setId(UUID.fromString(address.getUuid()));
                 responseAddress.setFlatBuildingName(address.getFlatBuilNumber());
                 responseAddress.setLocality(address.getLocality());
                 responseAddress.setCity(address.getCity());

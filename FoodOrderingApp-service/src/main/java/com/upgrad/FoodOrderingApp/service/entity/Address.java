@@ -1,11 +1,8 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +16,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -61,28 +60,27 @@ public class Address implements Serializable {
     @ManyToOne
     @JoinColumn(name = "state_id")
     private State state;
-    
+
     public List<Customer> getCustomers() {
         return customers;
     }
-    
+
     public void setCustomers(
-        List<Customer> customers) {
+            final List<Customer> customers) {
         this.customers = customers;
     }
-    
+
     @Column(name = "active")
     private Integer active;
-    
+
     @ManyToMany(targetEntity = Customer.class, cascade = {
-        CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH
+            CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH
     })
     @JoinTable(name = "CUSTOMER_ADDRESS",
-        joinColumns = @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID"),
-        inverseJoinColumns = @JoinColumn(name = "CUSTOMER_ID" , referencedColumnName = "ID"))
+               joinColumns = @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID"),
+               inverseJoinColumns = @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID"))
     private List<Customer> customers = new ArrayList<>();
-    
-    
+
     public Integer getId() {
         return id;
     }
