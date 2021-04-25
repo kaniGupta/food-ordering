@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "category")
 @NamedQueries({
-                      @NamedQuery(name = "allCategory", query = "select r from Restaurant r")
+                      @NamedQuery(name = "allCategory", query = "select c from Category c")
               })
 public class Category implements Serializable {
     private static final long serialVersionUID = 2883504702565284914L;
