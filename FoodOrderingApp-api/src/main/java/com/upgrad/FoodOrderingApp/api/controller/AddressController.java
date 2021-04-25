@@ -3,6 +3,7 @@ package com.upgrad.FoodOrderingApp.api.controller;
 import com.upgrad.FoodOrderingApp.api.model.AddressList;
 import com.upgrad.FoodOrderingApp.api.model.AddressListResponse;
 import com.upgrad.FoodOrderingApp.api.model.AddressListState;
+import com.upgrad.FoodOrderingApp.api.model.DeleteAddressResponse;
 import com.upgrad.FoodOrderingApp.api.model.SaveAddressRequest;
 import com.upgrad.FoodOrderingApp.api.model.SaveAddressResponse;
 import com.upgrad.FoodOrderingApp.api.model.UpdateCustomerResponse;
@@ -26,6 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -79,6 +81,18 @@ public class AddressController {
             response = converListOfAddress(addresses);
         }
         return new ResponseEntity<AddressListResponse>(response, HttpStatus.OK);
+    }
+    
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Address successfully deleted"),
+    })
+    @RequestMapping(method = RequestMethod.DELETE,path="/{address_id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @CrossOrigin
+    public ResponseEntity<DeleteAddressResponse> deleteAddress(@RequestHeader final String authorization,@PathVariable final String address_id)
+        throws AuthorizationFailedException, AddressNotFoundException {
+        
+        DeleteAddressResponse response = new DeleteAddressResponse().id(UUID.randomUUID()).status("ADDRESS DELETED SUCCESSFULLY");
+        return new ResponseEntity<DeleteAddressResponse>(response, HttpStatus.OK);
     }
     
     private AddressListResponse converListOfAddress(List<Address> addresses) {
