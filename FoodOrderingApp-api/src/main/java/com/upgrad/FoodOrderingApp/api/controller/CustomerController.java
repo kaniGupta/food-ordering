@@ -9,8 +9,8 @@ import com.upgrad.FoodOrderingApp.api.model.UpdateCustomerResponse;
 import com.upgrad.FoodOrderingApp.api.model.UpdatePasswordRequest;
 import com.upgrad.FoodOrderingApp.api.model.UpdatePasswordResponse;
 import com.upgrad.FoodOrderingApp.service.businness.CustomerBusinessService;
-import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
-import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerAuth;
+import com.upgrad.FoodOrderingApp.service.entity.Customer;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
@@ -52,17 +52,17 @@ public class CustomerController {
         @RequestBody(required = false) final SignupCustomerRequest signupCustomerRequest)
         throws SignUpRestrictedException {
         
-        final CustomerEntity customerEntity = new CustomerEntity();
-        customerEntity.setUuid(UUID.randomUUID().toString());
-        customerEntity.setFirstName(signupCustomerRequest.getFirstName());
-        customerEntity.setLastName(signupCustomerRequest.getLastName());
-        customerEntity.setEmail(signupCustomerRequest.getEmailAddress());
-        customerEntity.setPassword(signupCustomerRequest.getPassword());
-        customerEntity.setContactNumber(signupCustomerRequest.getContactNumber());
-        final CustomerEntity createdCustomerEntity = customerBusinessService
-                                                         .createCustomer(customerEntity);
+        final Customer customer = new Customer();
+        customer.setUuid(UUID.randomUUID().toString());
+        customer.setFirstName(signupCustomerRequest.getFirstName());
+        customer.setLastName(signupCustomerRequest.getLastName());
+        customer.setEmail(signupCustomerRequest.getEmailAddress());
+        customer.setPassword(signupCustomerRequest.getPassword());
+        customer.setContactNumber(signupCustomerRequest.getContactNumber());
+        final Customer createdCustomer = customerBusinessService
+                                                         .createCustomer(customer);
         SignupCustomerResponse customerResponse = new SignupCustomerResponse()
-                                                      .id(createdCustomerEntity.getUuid())
+                                                      .id(createdCustomer.getUuid())
                                                       .status("CUSTOMER SUCCESSFULLY REGISTERED");
         return new ResponseEntity<SignupCustomerResponse>(customerResponse, HttpStatus.CREATED);
     }
@@ -71,9 +71,9 @@ public class CustomerController {
     public ResponseEntity<LoginResponse> login(
         @RequestHeader("authorization") final String authorization)
         throws AuthenticationFailedException {
-        CustomerAuthEntity customerAuthToken = customerBusinessService
+        CustomerAuth customerAuthToken = customerBusinessService
                                                    .login(authorization);
-        CustomerEntity customer = customerAuthToken.getCustomer();
+        Customer customer = customerAuthToken.getCustomer();
         LoginResponse loginResponse = new LoginResponse().id(customer.getUuid())
                                           .contactNumber(customer.getContactNumber())
                                           .firstName(customer.getFirstName())
@@ -92,8 +92,8 @@ public class CustomerController {
     public ResponseEntity<LogoutResponse> logout(
         @RequestHeader("authorization") final String authorization)
         throws AuthorizationFailedException {
-        CustomerAuthEntity customerAuthToken = customerBusinessService.logout(authorization);
-        CustomerEntity customer = customerAuthToken.getCustomer();
+        CustomerAuth customerAuthToken = customerBusinessService.logout(authorization);
+        Customer customer = customerAuthToken.getCustomer();
         LogoutResponse logoutResponse = new LogoutResponse().id(customer.getUuid())
                                             .message("LOGGED OUT SUCCESSFULLY");
         return new ResponseEntity<LogoutResponse>(logoutResponse, HttpStatus.OK);
@@ -106,13 +106,16 @@ public class CustomerController {
     public ResponseEntity<UpdateCustomerResponse> update(@RequestHeader("authorization") final String authorization,
         @RequestBody(required = false) final UpdateCustomerRequest updateCustomerRequest)
         throws SignUpRestrictedException, AuthorizationFailedException, UpdateCustomerException {
-        final CustomerEntity customerEntity = new CustomerEntity();
-        customerEntity.setUuid(UUID.randomUUID().toString());
-        customerEntity.setFirstName(updateCustomerRequest.getFirstName());
-        customerEntity.setLastName(updateCustomerRequest.getLastName());
-        final CustomerEntity updatedCustomerEntity = customerBusinessService.update(authorization, customerEntity);
-        UpdateCustomerResponse customerResponse = new UpdateCustomerResponse().id(updatedCustomerEntity.getUuid()).firstName(updatedCustomerEntity.getFirstName()).
-                                                                                                                                                                      lastName(updatedCustomerEntity.getLastName())
+        final Customer customer = new Customer();
+        customer.setUuid(UUID.randomUUID().toString());
+        customer.setFirstName(updateCustomerRequest.getFirstName());
+        customer.setLastName(updateCustomerRequest.getLastName());
+        final Customer updatedCustomer = customerBusinessService.update(authorization, customer);
+        UpdateCustomerResponse customerResponse = new UpdateCustomerResponse().id(updatedCustomer.getUuid()).firstName(
+            updatedCustomer.getFirstName()).
+                                                                                                                                                                      lastName(
+                                                                                                                                                                          updatedCustomer
+                                                                                                                                                                              .getLastName())
                                                       .status("CUSTOMER DETAILS UPDATED SUCCESSFULLY");
         return new ResponseEntity<UpdateCustomerResponse>(customerResponse, HttpStatus.OK);
     }
@@ -124,8 +127,8 @@ public class CustomerController {
     public ResponseEntity<UpdatePasswordResponse> changePassword(@RequestHeader("authorization") final String authorization,
         @RequestBody(required = false) final UpdatePasswordRequest updatePasswordRequest)
         throws SignUpRestrictedException, AuthorizationFailedException, UpdateCustomerException {
-        final CustomerEntity updatedCustomerEntity = customerBusinessService.updatePassword(authorization, updatePasswordRequest.getOldPassword(), updatePasswordRequest.getNewPassword());
-        UpdatePasswordResponse passwordResponse = new UpdatePasswordResponse().id(updatedCustomerEntity.getUuid()).status("CUSTOMER PASSWORD UPDATED SUCCESSFULLY");
+        final Customer updatedCustomer = customerBusinessService.updatePassword(authorization, updatePasswordRequest.getOldPassword(), updatePasswordRequest.getNewPassword());
+        UpdatePasswordResponse passwordResponse = new UpdatePasswordResponse().id(updatedCustomer.getUuid()).status("CUSTOMER PASSWORD UPDATED SUCCESSFULLY");
         return new ResponseEntity<UpdatePasswordResponse>(passwordResponse, HttpStatus.OK);
     }
     

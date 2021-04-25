@@ -1,10 +1,17 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -18,13 +25,13 @@ import java.util.Objects;
 @Table(name = "CUSTOMER")
 @NamedQueries(
         {
-                @NamedQuery(name = "customerByUuid", query = "select c from CustomerEntity c where c.uuid = :uuid"),
-                @NamedQuery(name = "customerByEmail", query = "select c from CustomerEntity c where c.email =:email"),
+                @NamedQuery(name = "customerByUuid", query = "select c from Customer c where c.uuid = :uuid"),
+                @NamedQuery(name = "customerByEmail", query = "select c from Customer c where c.email =:email"),
                 @NamedQuery(name = "customerByContactNumber",
-                            query = "select c from CustomerEntity c where c.contactNumber =:contactNumber"),
+                            query = "select c from Customer c where c.contactNumber =:contactNumber"),
         }
 )
-public class CustomerEntity implements Serializable {
+public class Customer implements Serializable {
 
     private static final long serialVersionUID = -240597140638746842L;
     @Id
@@ -130,16 +137,30 @@ public class CustomerEntity implements Serializable {
     @NotNull
     @Size(max = 200)
     private String salt;
-
+    
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinTable(name = "CUSTOMER_ADDRESS",
+        joinColumns = @JoinColumn(name = "CUSTOMER_ID"),
+        inverseJoinColumns = @JoinColumn(name = "ADDRESS_ID"))
+    private List<Address> addresses = new ArrayList<>();
+    
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+    
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
+    
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CustomerEntity)) {
+        if (!(o instanceof Customer)) {
             return false;
         }
-        final CustomerEntity that = (CustomerEntity) o;
+        final Customer that = (Customer) o;
         return id.equals(that.id) && uuid.equals(that.uuid);
     }
 
