@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -12,6 +14,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "item")
+@NamedQueries({
+                      @NamedQuery(name = "getItemById",
+                                  query = "select i from Item i where i.id =:id")
+              })
 public class Item implements Serializable {
 
     private static final long serialVersionUID = -7657675664048211124L;
