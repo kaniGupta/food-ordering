@@ -27,7 +27,7 @@ public class AddressDao {
     }
     
     @Transactional
-    public Address getAddressByUuid(final Integer uuid) {
+    public Address getAddressByUuid(final String uuid) {
         try {
             return entityManager.createNamedQuery("addressByUuid", Address.class)
                        .setParameter("uuid", uuid)
@@ -44,8 +44,7 @@ public class AddressDao {
     }
     
     @Transactional
-    public Address deleteAddress(Address address) {
+    public void deleteAddress(Address address) {
         entityManager.remove(address);
-        return address;
     }
 }
