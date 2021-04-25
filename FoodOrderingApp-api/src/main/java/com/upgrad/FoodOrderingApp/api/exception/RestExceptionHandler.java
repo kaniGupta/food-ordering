@@ -20,7 +20,7 @@ public class RestExceptionHandler {
         final ErrorResponse error = new ErrorResponse().code(exe.getCode())
                                         .message(exe.getErrorMessage())
                                         .rootCause(exe.getErrorMessage());
-        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
     
     @ExceptionHandler(AuthenticationFailedException.class)
@@ -33,7 +33,7 @@ public class RestExceptionHandler {
     }
     
     @ExceptionHandler(AuthorizationFailedException.class)
-    public ResponseEntity<ErrorResponse> authenticationFailedException(final AuthorizationFailedException exe,
+    public ResponseEntity<ErrorResponse> authorizationFailedException(final AuthorizationFailedException exe,
         final WebRequest request) {
         final ErrorResponse error = new ErrorResponse().code(exe.getCode())
                                         .message(exe.getErrorMessage())
@@ -42,7 +42,7 @@ public class RestExceptionHandler {
     }
     
     @ExceptionHandler(UpdateCustomerException.class)
-    public ResponseEntity<ErrorResponse> authenticationFailedException(final UpdateCustomerException exe,
+    public ResponseEntity<ErrorResponse> updateCustomerFailedException(final UpdateCustomerException exe,
         final WebRequest request) {
         final ErrorResponse error = new ErrorResponse().code(exe.getCode())
                                         .message(exe.getErrorMessage())
