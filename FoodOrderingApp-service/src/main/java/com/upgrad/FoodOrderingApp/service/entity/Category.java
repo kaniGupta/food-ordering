@@ -17,7 +17,9 @@ import java.io.Serializable;
 @NamedQueries({
                       @NamedQuery(name = "allCategory", query = "select c from Category c"),
                       @NamedQuery(name = "getCategoryByUuid",
-                                  query = "select r from Category r where r.uuid =:uuid")
+                                  query = "select r from Category r where r.uuid =:uuid"),
+                      @NamedQuery(name = "getCategoryById",
+                                  query = "select r from Category r where r.id =:id")
               })
 public class Category implements Serializable {
     private static final long serialVersionUID = 2883504702565284914L;

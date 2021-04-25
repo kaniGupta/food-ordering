@@ -3,10 +3,15 @@ package com.upgrad.FoodOrderingApp.service.businness;
 import com.upgrad.FoodOrderingApp.service.beans.RestaurantDetailsResponse;
 import com.upgrad.FoodOrderingApp.service.beans.RestaurantDetailsResponseAddress;
 import com.upgrad.FoodOrderingApp.service.beans.RestaurantDetailsResponseAddressState;
+import com.upgrad.FoodOrderingApp.service.dao.AddressDao;
+import com.upgrad.FoodOrderingApp.service.dao.CategoryDao;
+import com.upgrad.FoodOrderingApp.service.dao.RestaurantCategoryDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
 import com.upgrad.FoodOrderingApp.service.dao.StateDao;
 import com.upgrad.FoodOrderingApp.service.entity.Address;
+import com.upgrad.FoodOrderingApp.service.entity.Category;
 import com.upgrad.FoodOrderingApp.service.entity.Restaurant;
+import com.upgrad.FoodOrderingApp.service.entity.RestaurantCategory;
 import com.upgrad.FoodOrderingApp.service.entity.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,29 +28,45 @@ public class RestaurantService {
     private static final Logger log = LoggerFactory.getLogger(RestaurantService.class);
     private final RestaurantDao restaurantDao;
     private final StateDao stateDao;
+    private final RestaurantCategoryDao restaurantCategoryDao;
+    private final CategoryDao categoryDao;
+    private final AddressDao addressDao;
 
     @Autowired
     public RestaurantService(final RestaurantDao restaurantDao,
-                             final StateDao stateDao) {
+                             final StateDao stateDao,
+                             final RestaurantCategoryDao restaurantCategoryDao,
+                             final CategoryDao categoryDao,
+                             final AddressDao addressDao) {
         this.restaurantDao = restaurantDao;
         this.stateDao = stateDao;
+        this.restaurantCategoryDao = restaurantCategoryDao;
+        this.categoryDao = categoryDao;
+        this.addressDao = addressDao;
     }
 
-    public List<RestaurantDetailsResponse> getRestaurants() {
+    public List<Restaurant> getRestaurants() {
         log.debug("Fetch Restaurants.");
-        final List<RestaurantDetailsResponse> responseList = new ArrayList<>();
+        return restaurantDao.getAllRestaurants();
+    }
 
-        final List<Restaurant> restaurants = restaurantDao.getAllRestaurants();
-
-        if (null != restaurants && !restaurants.isEmpty()) {
-            restaurants.forEach(restaurant -> {
-                final RestaurantDetailsResponse response =
-                        getRestaurantDetailsResponse(restaurant);
-                responseList.add(response);
+    public String getRestaurantCategories(final Restaurant restaurant) {
+        final List<RestaurantCategory> categories =
+                restaurantCategoryDao.getRestaurantCategoriesByRestaurantId(restaurant.getId());
+        final List<String> categoryList = new ArrayList<>();
+        if (null != categories && !categories.isEmpty()) {
+            categories.forEach(cat -> {
+                final Category category = categoryDao.getCategoryById(cat.getId());
+                if (null != category) {
+                    categoryList.add(category.getCategoryName());
+                }
             });
         }
-        log.debug("Total number of restaurants fetched : {}", responseList.size());
-        return responseList;
+        return String.join(", ", categoryList);
+    }
+
+    public Address getRestaurantAddress(final Integer id) {
+        return addressDao.getAddressById(id);
     }
 
     public RestaurantDetailsResponse getRestaurantByName(final String restaurantName) {

@@ -2,7 +2,13 @@ package com.upgrad.FoodOrderingApp.api.controller;
 
 import com.upgrad.FoodOrderingApp.api.mapper.RestaurantMapper;
 import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponse;
+import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddress;
+import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddressState;
+import com.upgrad.FoodOrderingApp.api.model.RestaurantList;
+import com.upgrad.FoodOrderingApp.api.model.RestaurantListResponse;
 import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
+import com.upgrad.FoodOrderingApp.service.entity.Address;
+import com.upgrad.FoodOrderingApp.service.entity.Restaurant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,21 +39,44 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RestaurantDetailsResponse>> getRestaurants() {
+    public ResponseEntity<RestaurantListResponse> getRestaurants() {
         log.debug("Get all restaurants.");
-        final List<RestaurantDetailsResponse> responseList = new ArrayList<>();
-        final List<com.upgrad.FoodOrderingApp.service.beans.RestaurantDetailsResponse> restaurants =
-                restaurantService.getRestaurants();
-        if (null != restaurants && !restaurants.isEmpty()) {
-            restaurants.forEach(restaurant -> {
-                final RestaurantDetailsResponse response =
-                        restaurantMapper.mapRestaurantDetailsResponse(restaurant);
-                if (null != response) {
-                    responseList.add(response);
+        final RestaurantListResponse response = new RestaurantListResponse();
+        final List<RestaurantList> responseList = new ArrayList<>();
+        final List<Restaurant> restaurants = restaurantService.getRestaurants();
+
+        restaurants.forEach(restaurant -> {
+            final RestaurantList restaurantList = new RestaurantList();
+
+            restaurantList.setId(UUID.fromString(restaurant.getUuid()));
+            restaurantList.setRestaurantName(restaurant.getRestaurantName());
+            restaurantList.setPhotoURL(restaurant.getPhotoUrl());
+            restaurantList.setCustomerRating(restaurant.getCustomerRating());
+            restaurantList.setAveragePrice(restaurant.getAveragePriceForTwo());
+            restaurantList.setNumberCustomersRated(restaurant.getNumberOfCustomersRated());
+
+            final RestaurantDetailsResponseAddress responseAddress = new RestaurantDetailsResponseAddress();
+            final Address address = restaurantService.getRestaurantAddress(restaurant.getId());
+            if (null != address) {
+                responseAddress.setId(UUID.fromString(address.getUuid()));
+                responseAddress.setFlatBuildingName(address.getFlatBuilNumber());
+                responseAddress.setLocality(address.getLocality());
+                responseAddress.setCity(address.getCity());
+                responseAddress.setPincode(address.getPincode());
+                final RestaurantDetailsResponseAddressState state = new RestaurantDetailsResponseAddressState();
+                if (null != address.getState()) {
+                    state.setId(UUID.fromString(address.getState().getUuid()));
+                    state.setStateName(address.getState().getStateName());
                 }
-            });
-        }
-        return ResponseEntity.ok(responseList);
+                responseAddress.setState(state);
+            }
+            restaurantList.setAddress(responseAddress);
+            restaurantList.setCategories(restaurantService.getRestaurantCategories(restaurant));
+            responseList.add(restaurantList);
+        });
+
+        response.restaurants(responseList);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/name/{restaurant_name}")

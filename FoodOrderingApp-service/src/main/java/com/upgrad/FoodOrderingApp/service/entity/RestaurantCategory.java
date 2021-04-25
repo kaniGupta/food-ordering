@@ -5,11 +5,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "restaurant_category")
+@NamedQueries({
+                      @NamedQuery(name = "getRestaurantCategoryByRestaurantId",
+                                  query = "select r from RestaurantCategory r where r.restaurantId =:restaurantId")
+              })
 public class RestaurantCategory implements Serializable {
 
     private static final long serialVersionUID = -6235418440908751416L;
