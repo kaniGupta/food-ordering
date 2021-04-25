@@ -5,11 +5,10 @@ import com.upgrad.FoodOrderingApp.service.entity.Customer;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class CustomerDao {
@@ -23,6 +22,7 @@ public class CustomerDao {
         return Customer;
     }
 
+    @Transactional
     public Customer getCustomerByUuid(final String uuid) {
         try {
             return entityManager.createNamedQuery("customerByUuid", Customer.class)
@@ -50,22 +50,25 @@ public class CustomerDao {
             return null;
         }
     }
-
-
+    
+    
+    @Transactional
     public CustomerAuth createAuthToken(final CustomerAuth CustomerAuth) {
         entityManager.persist(CustomerAuth);
         return CustomerAuth;
     }
-
+    
+    @Transactional
     public void updateCustomer(final Customer updatedCustomer) {
         entityManager.merge(updatedCustomer);
     }
-
+    
+    @Transactional
     public void updateCustomerAuthEntity(final CustomerAuth updatedCustomerAuth) {
         entityManager.merge(updatedCustomerAuth);
     }
-
-
+    
+    @Transactional
     public CustomerAuth getCustomerAuthToken(final String accessToken) {
         try {
             return entityManager
