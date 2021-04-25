@@ -195,7 +195,7 @@ public class CustomerBusinessService {
      * @throws SignUpRestrictedException
      */
     @Transactional
-    public Customer updatePassword(final String accessToken, final String oldPassword, final String newPassword) throws AuthorizationFailedException, UpdateCustomerException, SignUpRestrictedException {
+    public Customer updatePassword(final String accessToken, final String oldPassword, final String newPassword) throws AuthorizationFailedException, UpdateCustomerException{
         if (oldPassword == null || StringUtils.isEmpty(oldPassword) || newPassword == null || StringUtils.isEmpty(newPassword)) {
             throw new UpdateCustomerException("UCR-003", "No field should be empty");
         }
