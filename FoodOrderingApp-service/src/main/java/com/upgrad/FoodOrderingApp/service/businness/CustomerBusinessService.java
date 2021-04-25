@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 public class CustomerBusinessService {
 
     private static final String EMAIL_FORMAT = "^[A-Za-z0-9]+@(.+)$";
-    private static final String PASSWORD_FORMAT = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[#@$%&*!^])(?=\\\\S+$).{8,20}$";
     private final CustomerDao customerDao;
     private final CustomerAuthDao customerAuthDao;
     private final PasswordCryptographyProvider passwordCryptographyProvider;
@@ -52,7 +51,7 @@ public class CustomerBusinessService {
             throw new SignUpRestrictedException("SGR-001",
                                                 "This contact number is already registered! Try other contact number.");
         }
-        if (!validateCustomerEntity(customer)) {
+        if (!validateCustomer(customer)) {
             throw new SignUpRestrictedException("SGR-005",
                                                 "Except last name all fields should be filled");
         }
@@ -64,11 +63,11 @@ public class CustomerBusinessService {
             throw new SignUpRestrictedException("SGR-003",
                                                 "Invalid contact number!");
         }
-        /*
-        if (!validatePassword(customerEntity.getPassword())) {
+        
+        if (!validatePassword(customer.getPassword())) {
             throw new SignUpRestrictedException("SGR-004",
                                                 "Weak password!");
-        }*/
+        }
         //Encrypt the password
         final String[] encryptedText = passwordCryptographyProvider.encrypt(customer.getPassword());
         customer.setSalt(encryptedText[0]);
@@ -234,7 +233,7 @@ public class CustomerBusinessService {
      * @param customer
      * @return false when any field other than last name is empty
      */
-    private boolean validateCustomerEntity(final Customer customer) {
+    private boolean validateCustomer(final Customer customer) {
         if (Objects.isNull(customer.getFirstName()) || StringUtils.isEmpty(customer.getFirstName())) {
             return false;
         } else if (Objects.isNull(customer.getEmail()) || StringUtils.isEmpty(customer.getEmail())) {
@@ -245,22 +244,34 @@ public class CustomerBusinessService {
             return !Objects.isNull(customer.getContactNumber()) && !StringUtils.isEmpty(customer.getContactNumber());
         }
     }
-
+    
+    /**
+     * Validates an email
+     * @param email
+     * @return
+     */
     private boolean validateEmail(final String email) {
         final Pattern pattern = Pattern.compile(EMAIL_FORMAT);
         final Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
-
+    
+    /**
+     * Validates a contact number
+     * @param contactNumber
+     * @return
+     */
     private boolean validateContactNumber(final String contactNumber) {
         return contactNumber.matches("\\d{10}");
     }
-
+    
+    /**
+     * Validates a password
+     * @param password
+     * @return
+     */
     private boolean validatePassword(final String password) {
-        if (password.length() < 8) {
-            return false;
-        }
-        return password.matches(PASSWORD_FORMAT);
+        return password.matches("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}");
     }
 
 }
