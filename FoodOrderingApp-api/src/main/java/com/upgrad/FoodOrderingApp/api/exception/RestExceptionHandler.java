@@ -1,8 +1,10 @@
 package com.upgrad.FoodOrderingApp.api.exception;
 
 import com.upgrad.FoodOrderingApp.api.model.ErrorResponse;
+import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
+import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
 import com.upgrad.FoodOrderingApp.service.exception.UpdateCustomerException;
 import org.springframework.http.HttpStatus;
@@ -49,6 +51,26 @@ public class RestExceptionHandler {
                                         .rootCause(exe.getErrorMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+    
+    @ExceptionHandler(SaveAddressException.class)
+    public ResponseEntity<ErrorResponse> saveAddressFailedException(final SaveAddressException exe,
+        final WebRequest request) {
+        final ErrorResponse error = new ErrorResponse().code(exe.getCode())
+                                        .message(exe.getErrorMessage())
+                                        .rootCause(exe.getErrorMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(AddressNotFoundException.class)
+    public ResponseEntity<ErrorResponse> addressNotFoundException(final AddressNotFoundException exe,
+        final WebRequest request) {
+        final ErrorResponse error = new ErrorResponse().code(exe.getCode())
+                                        .message(exe.getErrorMessage())
+                                        .rootCause(exe.getErrorMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+    
+    
 }
 
 
