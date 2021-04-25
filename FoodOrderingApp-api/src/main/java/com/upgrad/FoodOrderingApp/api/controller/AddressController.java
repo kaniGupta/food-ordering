@@ -90,8 +90,8 @@ public class AddressController {
     @CrossOrigin
     public ResponseEntity<DeleteAddressResponse> deleteAddress(@RequestHeader final String authorization,@PathVariable final String address_id)
         throws AuthorizationFailedException, AddressNotFoundException {
-        
-        DeleteAddressResponse response = new DeleteAddressResponse().id(UUID.randomUUID()).status("ADDRESS DELETED SUCCESSFULLY");
+        Address deletedAddress = addressBusinessService.deleteAddress(authorization,address_id);
+        DeleteAddressResponse response = new DeleteAddressResponse().id(UUID.fromString(address_id)).status("ADDRESS DELETED SUCCESSFULLY");
         return new ResponseEntity<DeleteAddressResponse>(response, HttpStatus.OK);
     }
     
