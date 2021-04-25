@@ -1,6 +1,7 @@
 package com.upgrad.FoodOrderingApp.api.controller;
 
 import com.upgrad.FoodOrderingApp.api.mapper.CategoryMapper;
+import com.upgrad.FoodOrderingApp.api.model.CategoryDetailsResponse;
 import com.upgrad.FoodOrderingApp.api.model.CategoryListResponse;
 import com.upgrad.FoodOrderingApp.service.businness.CategoryService;
 import com.upgrad.FoodOrderingApp.service.entity.Category;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/category")
@@ -33,7 +35,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<CategoryListResponse>> getCategories() {
-        log.debug("Get all categories");
+        log.info("Get all categories");
         final List<CategoryListResponse> responseList = new ArrayList<>();
         final List<Category> categories = categoryService.getCategories();
 
@@ -47,7 +49,16 @@ public class CategoryController {
     }
 
     @GetMapping("/{category_id}")
-    public String getCategoryById(@PathVariable("category_id") final String categoryId) {
-        return "CategoryController";
+    public ResponseEntity<CategoryDetailsResponse> getCategoryById(
+            @PathVariable("category_id") final String categoryId) {
+        log.info("Get category by UUID : {}", categoryId);
+        final CategoryDetailsResponse response = new CategoryDetailsResponse();
+        final Category category = categoryService.getCategoryById(categoryId);
+
+        if (null != category) {
+            response.setId(UUID.fromString(category.getUuid()));
+            response.setCategoryName(category.getCategoryName());
+        }
+        return ResponseEntity.ok(response);
     }
 }

@@ -21,7 +21,12 @@ public class CategoryService {
     }
 
     public List<Category> getCategories() {
-        log.debug("Get all categories");
+        log.info("Get all categories");
         return categoryDao.getAllCategories();
+    }
+
+    public Category getCategoryById(final String categoryId) {
+        log.info("Get category by UUID : {}", categoryId);
+        return categoryDao.getCategoryByUuid(categoryId);
     }
 }
