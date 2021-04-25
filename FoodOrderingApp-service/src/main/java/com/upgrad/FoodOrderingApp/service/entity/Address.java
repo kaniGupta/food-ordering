@@ -1,11 +1,15 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -34,7 +38,7 @@ public class Address implements Serializable {
     @Column(name = "uuid")
     @NotNull
     @Size(max = 200)
-    private UUID uuid;
+    private String uuid;
 
     @Column(name = "flat_buil_number")
     @Size(max = 255)
@@ -55,10 +59,23 @@ public class Address implements Serializable {
     @ManyToOne
     @JoinColumn(name = "state_id")
     private State state;
-
+    
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+    
+    public void setCustomers(
+        List<Customer> customers) {
+        this.customers = customers;
+    }
+    
     @Column(name = "active")
     private Integer active;
-
+    
+    @ManyToMany(mappedBy = "addresses", fetch = FetchType.LAZY)
+    private List<Customer> customers = new ArrayList<>();
+    
+    
     public Integer getId() {
         return id;
     }
@@ -67,11 +84,11 @@ public class Address implements Serializable {
         this.id = id;
     }
 
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(final UUID uuid) {
+    public void setUuid(final String uuid) {
         this.uuid = uuid;
     }
 
