@@ -4,8 +4,8 @@ import com.upgrad.FoodOrderingApp.service.dao.AddressDao;
 import com.upgrad.FoodOrderingApp.service.dao.CustomerDao;
 import com.upgrad.FoodOrderingApp.service.dao.StateDao;
 import com.upgrad.FoodOrderingApp.service.entity.Address;
-import com.upgrad.FoodOrderingApp.service.entity.Customer;
-import com.upgrad.FoodOrderingApp.service.entity.CustomerAuth;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.State;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
@@ -32,7 +32,7 @@ public class AddressService {
     
     public Address save(final String accessToken,final Address address,final String stateId)
         throws AuthorizationFailedException, SaveAddressException, AddressNotFoundException {
-        final CustomerAuth customerAuth = customerDao.getCustomerAuthToken(accessToken);
+        final CustomerAuthEntity customerAuth = customerDao.getCustomerAuthToken(accessToken);
         if (customerAuth == null) {
             throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in");
         }
@@ -53,11 +53,11 @@ public class AddressService {
         if(state == null) {
             throw new AddressNotFoundException("ANF-002","No state by this id");
         }
-        Customer customer = customerAuth.getCustomer();
+        CustomerEntity customerEntity = customerAuth.getCustomer();
         address.setState(state);
         address.setActive(1);
-        if(!address.getCustomers().contains(customer)) {
-            address.getCustomers().add(customer);
+        if(!address.getCustomers().contains(customerEntity)) {
+            address.getCustomers().add(customerEntity);
         }
         return addressDao.createAddress(address);
     }
@@ -65,7 +65,7 @@ public class AddressService {
     
     public List<Address> getAllAddressesOfCustomer(final String accessToken)
         throws AuthorizationFailedException, SaveAddressException, AddressNotFoundException {
-        final CustomerAuth customerAuth = customerDao.getCustomerAuthToken(accessToken);
+        final CustomerAuthEntity customerAuth = customerDao.getCustomerAuthToken(accessToken);
         if (customerAuth == null) {
             throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in");
         }
@@ -78,13 +78,13 @@ public class AddressService {
             throw new AuthorizationFailedException("ATHR-003",
                 "Your session is expired. Log in again to access this endpoint.");
         }
-       Customer customer = customerAuth.getCustomer();
-       return customer.getAddresses();
+       CustomerEntity customerEntity = customerAuth.getCustomer();
+       return customerEntity.getAddresses();
     }
     
     public Address deleteAddress(String accessToken,String uuid)
         throws AuthorizationFailedException, AddressNotFoundException {
-        final CustomerAuth customerAuth = customerDao.getCustomerAuthToken(accessToken);
+        final CustomerAuthEntity customerAuth = customerDao.getCustomerAuthToken(accessToken);
         if (customerAuth == null) {
             throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in");
         }
@@ -104,8 +104,8 @@ public class AddressService {
         if(address == null){
             throw new AddressNotFoundException("ANF-003","No address by this id");
         }
-        Customer customer = customerAuth.getCustomer();
-        if(!address.getCustomers().contains(customer)) {
+        CustomerEntity customerEntity = customerAuth.getCustomer();
+        if(!address.getCustomers().contains(customerEntity)) {
             throw new AuthorizationFailedException("ATHR-004",
                 "You are not authorized to view/update/delete any one else's address");
         }

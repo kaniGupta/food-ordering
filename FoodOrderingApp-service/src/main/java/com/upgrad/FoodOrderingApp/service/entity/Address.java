@@ -62,20 +62,20 @@ public class Address implements Serializable {
     private State state;
     @Column(name = "active")
     private Integer active;
-    @ManyToMany(targetEntity = Customer.class, cascade = {
+    @ManyToMany(targetEntity = CustomerEntity.class, cascade = {
             CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH
     })
     @JoinTable(name = "CUSTOMER_ADDRESS",
                joinColumns = @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID"),
                inverseJoinColumns = @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID"))
-    private List<Customer> customers = new ArrayList<>();
+    private List<CustomerEntity> customers = new ArrayList<>();
 
-    public List<Customer> getCustomers() {
+    public List<CustomerEntity> getCustomers() {
         return customers;
     }
 
     public void setCustomers(
-            final List<Customer> customers) {
+            final List<CustomerEntity> customers) {
         this.customers = customers;
     }
 
