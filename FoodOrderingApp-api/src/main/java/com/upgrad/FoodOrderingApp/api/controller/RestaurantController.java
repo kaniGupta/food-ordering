@@ -7,7 +7,7 @@ import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddressStat
 import com.upgrad.FoodOrderingApp.api.model.RestaurantList;
 import com.upgrad.FoodOrderingApp.api.model.RestaurantListResponse;
 import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
-import com.upgrad.FoodOrderingApp.service.entity.Address;
+import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.Restaurant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,17 +56,17 @@ public class RestaurantController {
             restaurantList.setNumberCustomersRated(restaurant.getNumberOfCustomersRated());
 
             final RestaurantDetailsResponseAddress responseAddress = new RestaurantDetailsResponseAddress();
-            final Address address = restaurantService.getRestaurantAddress(restaurant.getId());
-            if (null != address) {
-                responseAddress.setId(UUID.fromString(address.getUuid()));
-                responseAddress.setFlatBuildingName(address.getFlatBuilNumber());
-                responseAddress.setLocality(address.getLocality());
-                responseAddress.setCity(address.getCity());
-                responseAddress.setPincode(address.getPincode());
+            final AddressEntity addressEntity = restaurantService.getRestaurantAddress(restaurant.getId());
+            if (null != addressEntity) {
+                responseAddress.setId(UUID.fromString(addressEntity.getUuid()));
+                responseAddress.setFlatBuildingName(addressEntity.getFlatBuilNumber());
+                responseAddress.setLocality(addressEntity.getLocality());
+                responseAddress.setCity(addressEntity.getCity());
+                responseAddress.setPincode(addressEntity.getPincode());
                 final RestaurantDetailsResponseAddressState state = new RestaurantDetailsResponseAddressState();
-                if (null != address.getState()) {
-                    state.setId(UUID.fromString(address.getState().getUuid()));
-                    state.setStateName(address.getState().getStateName());
+                if (null != addressEntity.getState()) {
+                    state.setId(UUID.fromString(addressEntity.getState().getUuid()));
+                    state.setStateName(addressEntity.getState().getStateName());
                 }
                 responseAddress.setState(state);
             }

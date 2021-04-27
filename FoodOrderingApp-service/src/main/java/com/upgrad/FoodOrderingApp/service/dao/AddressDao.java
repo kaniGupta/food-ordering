@@ -1,6 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.dao;
 
-import com.upgrad.FoodOrderingApp.service.entity.Address;
+import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,9 +16,9 @@ public class AddressDao {
     private EntityManager entityManager;
 
     @Transactional
-    public Address getAddressById(final Integer id) {
+    public AddressEntity getAddressById(final Integer id) {
         try {
-            return entityManager.createNamedQuery("addressById", Address.class)
+            return entityManager.createNamedQuery("addressById", AddressEntity.class)
                                 .setParameter("id", id)
                                 .getSingleResult();
         } catch (final NoResultException nre) {
@@ -27,9 +27,9 @@ public class AddressDao {
     }
 
     @Transactional
-    public Address getAddressByUuid(final String uuid) {
+    public AddressEntity getAddressByUuid(final String uuid) {
         try {
-            return entityManager.createNamedQuery("addressByUuid", Address.class)
+            return entityManager.createNamedQuery("addressByUuid", AddressEntity.class)
                                 .setParameter("uuid", uuid)
                                 .getSingleResult();
         } catch (final NoResultException nre) {
@@ -38,13 +38,13 @@ public class AddressDao {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public Address createAddress(Address address) {
-        entityManager.persist(address);
-        return address;
+    public AddressEntity createAddress(AddressEntity addressEntity) {
+        entityManager.persist(addressEntity);
+        return addressEntity;
     }
 
     @Transactional
-    public void deleteAddress(Address address) {
-        entityManager.remove(address);
+    public void deleteAddress(AddressEntity addressEntity) {
+        entityManager.remove(addressEntity);
     }
 }

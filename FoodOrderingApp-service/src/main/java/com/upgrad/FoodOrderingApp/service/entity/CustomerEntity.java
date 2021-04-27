@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -135,17 +134,17 @@ public class CustomerEntity implements Serializable {
     @Size(max = 200)
     private String salt;
     
-    @ManyToMany(targetEntity = Address.class,mappedBy = "customers",cascade =  {
+    @ManyToMany(targetEntity = AddressEntity.class,mappedBy = "customers",cascade =  {
       CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH
     })
-    private List<Address> addresses = new ArrayList<>();
+    private List<AddressEntity> addressEntities = new ArrayList<>();
     
-    public List<Address> getAddresses() {
-        return addresses;
+    public List<AddressEntity> getAddresses() {
+        return addressEntities;
     }
     
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
+    public void setAddresses(List<AddressEntity> addressEntities) {
+        this.addressEntities = addressEntities;
     }
     
     @Override

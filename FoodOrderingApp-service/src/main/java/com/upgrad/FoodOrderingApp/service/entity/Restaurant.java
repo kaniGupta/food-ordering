@@ -59,7 +59,7 @@ public class Restaurant implements Serializable {
 
     @OneToOne
     @JoinColumn(name = "address_id")
-    private Address address;
+    private AddressEntity addressEntity;
 
     public Integer getId() {
         return id;
@@ -117,12 +117,12 @@ public class Restaurant implements Serializable {
         this.numberOfCustomersRated = numberOfCustomersRated;
     }
 
-    public Address getAddress() {
-        return address;
+    public AddressEntity getAddress() {
+        return addressEntity;
     }
 
-    public void setAddress(final Address address) {
-        this.address = address;
+    public void setAddress(final AddressEntity addressEntity) {
+        this.addressEntity = addressEntity;
     }
 
     @Override
@@ -188,7 +188,7 @@ public class Restaurant implements Serializable {
                ", customerRating=" + customerRating +
                ", averagePriceForTwo=" + averagePriceForTwo +
                ", numberOfCustomersRated=" + numberOfCustomersRated +
-               ", address=" + address +
+               ", address=" + addressEntity +
                '}';
     }
 }

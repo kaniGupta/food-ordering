@@ -16,13 +16,18 @@ import java.io.Serializable;
 @Table(name = "state")
 @NamedQueries({
                       @NamedQuery(name = "stateById",
-                                  query = "select s from State s where s.id = :id"),
+                                  query = "select s from StateEntity s where s.id = :id"),
                       @NamedQuery(name = "stateByUuid",
-                                  query = "select s from State s where s.uuid = :uuid")
+                                  query = "select s from StateEntity s where s.uuid = :uuid")
               })
-public class State implements Serializable {
+public class StateEntity implements Serializable {
     private static final long serialVersionUID = -4881592165270352456L;
-
+    
+    public StateEntity(String uuid, String stateName) {
+        this.uuid = uuid;
+        this.stateName = stateName;
+    }
+    
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +42,10 @@ public class State implements Serializable {
     @NotNull
     @Size(max = 30)
     private String stateName;
-
+    
+    public StateEntity() {
+    }
+    
     public Integer getId() {
         return id;
     }
@@ -67,19 +75,19 @@ public class State implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof State)) {
+        if (!(o instanceof StateEntity)) {
             return false;
         }
 
-        final State state = (State) o;
+        final StateEntity stateEntity = (StateEntity) o;
 
-        if (!getId().equals(state.getId())) {
+        if (!getId().equals(stateEntity.getId())) {
             return false;
         }
-        if (!getUuid().equals(state.getUuid())) {
+        if (!getUuid().equals(stateEntity.getUuid())) {
             return false;
         }
-        return getStateName().equals(state.getStateName());
+        return getStateName().equals(stateEntity.getStateName());
     }
 
     @Override
