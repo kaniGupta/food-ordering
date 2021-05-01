@@ -5,12 +5,9 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -25,12 +22,12 @@ import java.util.Objects;
 @Table(name = "CUSTOMER")
 @NamedQueries(
         {
-                @NamedQuery(name = "customerByUuid", query = "select c from Customer c where c.uuid = :uuid"),
-                @NamedQuery(name = "customerByEmail", query = "select c from Customer c where c.email =:email"),
-                @NamedQuery(name = "customerByContactNumber", query = "select c from Customer c where c.contactNumber =:contactNumber"),
+                @NamedQuery(name = "customerByUuid", query = "select c from CustomerEntity c where c.uuid = :uuid"),
+                @NamedQuery(name = "customerByEmail", query = "select c from CustomerEntity c where c.email =:email"),
+                @NamedQuery(name = "customerByContactNumber", query = "select c from CustomerEntity c where c.contactNumber =:contactNumber"),
         }
 )
-public class Customer implements Serializable {
+public class CustomerEntity implements Serializable {
 
     private static final long serialVersionUID = -240597140638746842L;
     @Id
@@ -137,17 +134,17 @@ public class Customer implements Serializable {
     @Size(max = 200)
     private String salt;
     
-    @ManyToMany(targetEntity = Address.class,mappedBy = "customers",cascade =  {
-        CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH
+    @ManyToMany(targetEntity = AddressEntity.class,mappedBy = "customers",cascade =  {
+      CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH
     })
-    private List<Address> addresses = new ArrayList<>();
+    private List<AddressEntity> addressEntities = new ArrayList<>();
     
-    public List<Address> getAddresses() {
-        return addresses;
+    public List<AddressEntity> getAddresses() {
+        return addressEntities;
     }
     
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
+    public void setAddresses(List<AddressEntity> addressEntities) {
+        this.addressEntities = addressEntities;
     }
     
     @Override
@@ -155,10 +152,10 @@ public class Customer implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Customer)) {
+        if (!(o instanceof CustomerEntity)) {
             return false;
         }
-        final Customer that = (Customer) o;
+        final CustomerEntity that = (CustomerEntity) o;
         return id.equals(that.id) && uuid.equals(that.uuid);
     }
 

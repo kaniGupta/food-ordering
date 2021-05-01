@@ -8,11 +8,11 @@ import com.upgrad.FoodOrderingApp.service.dao.CategoryDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantCategoryDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
 import com.upgrad.FoodOrderingApp.service.dao.StateDao;
-import com.upgrad.FoodOrderingApp.service.entity.Address;
+import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.Category;
 import com.upgrad.FoodOrderingApp.service.entity.Restaurant;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantCategory;
-import com.upgrad.FoodOrderingApp.service.entity.State;
+import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,7 @@ public class RestaurantService {
         return String.join(", ", categoryList);
     }
 
-    public Address getRestaurantAddress(final Integer id) {
+    public AddressEntity getRestaurantAddress(final Integer id) {
         return addressDao.getAddressById(id);
     }
 
@@ -84,23 +84,23 @@ public class RestaurantService {
     private RestaurantDetailsResponse getRestaurantDetailsResponse(final Restaurant restaurant) {
         final RestaurantDetailsResponse response = new RestaurantDetailsResponse();
         if (null != restaurant) {
-            final Address address = restaurant.getAddress();
-            if (null != address && null != address.getId()) {
+            final AddressEntity addressEntity = restaurant.getAddress();
+            if (null != addressEntity && null != addressEntity.getId()) {
                 final Integer id = restaurant.getAddress().getId();
-                final State state = stateDao.getStateById(id);
+                final StateEntity stateEntity = stateDao.getStateById(id);
 
                 final RestaurantDetailsResponseAddress responseAddress = new RestaurantDetailsResponseAddress();
                 final RestaurantDetailsResponseAddressState responseState =
                         new RestaurantDetailsResponseAddressState();
 
-                responseState.setId(UUID.fromString(state.getUuid()));
-                responseState.setStateName(state.getStateName());
+                responseState.setId(UUID.fromString(stateEntity.getUuid()));
+                responseState.setStateName(stateEntity.getStateName());
 
-                responseAddress.setId(UUID.fromString(address.getUuid()));
-                responseAddress.setFlatBuildingName(address.getFlatBuilNumber());
-                responseAddress.setLocality(address.getLocality());
-                responseAddress.setCity(address.getCity());
-                responseAddress.setPincode(address.getPincode());
+                responseAddress.setId(UUID.fromString(addressEntity.getUuid()));
+                responseAddress.setFlatBuildingName(addressEntity.getFlatBuilNumber());
+                responseAddress.setLocality(addressEntity.getLocality());
+                responseAddress.setCity(addressEntity.getCity());
+                responseAddress.setPincode(addressEntity.getPincode());
                 responseAddress.setState(responseState);
 
                 response.setAddress(responseAddress);

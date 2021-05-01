@@ -20,9 +20,9 @@ import java.util.Objects;
 @Table(name = "customer_auth")
 @NamedQueries({
                       @NamedQuery(name = "customerAuthByAccessToken",
-                                  query = "select ct from CustomerAuth ct where ct.accessToken = :accessToken ")
+                                  query = "select ct from CustomerAuthEntity ct where ct.accessToken = :accessToken ")
               })
-public class CustomerAuth implements Serializable {
+public class CustomerAuthEntity implements Serializable {
     private static final long serialVersionUID = 6431283291963697444L;
 
     @Override
@@ -30,10 +30,10 @@ public class CustomerAuth implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CustomerAuth)) {
+        if (!(o instanceof CustomerAuthEntity)) {
             return false;
         }
-        final CustomerAuth that = (CustomerAuth) o;
+        final CustomerAuthEntity that = (CustomerAuthEntity) o;
         return id.equals(that.id) && uuid.equals(that.uuid);
     }
 
@@ -54,7 +54,7 @@ public class CustomerAuth implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "CUSTOMER_ID")
-    private Customer customer;
+    private CustomerEntity customerEntity;
 
     @Column(name = "ACCESS_TOKEN")
     @NotNull
@@ -88,12 +88,12 @@ public class CustomerAuth implements Serializable {
         this.uuid = uuid;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public CustomerEntity getCustomer() {
+        return customerEntity;
     }
 
-    public void setCustomer(final Customer customer) {
-        this.customer = customer;
+    public void setCustomer(final CustomerEntity customerEntity) {
+        this.customerEntity = customerEntity;
     }
 
     public String getAccessToken() {

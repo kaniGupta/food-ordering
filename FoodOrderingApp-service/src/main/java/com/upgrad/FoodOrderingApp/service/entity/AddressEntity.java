@@ -23,11 +23,11 @@ import java.util.List;
 @Table(name = "address")
 @NamedQueries({
                       @NamedQuery(name = "addressById",
-                                  query = "select a from Address a where a.id = :id"),
+                                  query = "select a from AddressEntity a where a.id = :id"),
                       @NamedQuery(name = "addressByUuid",
-                                  query = "select a from Address a where a.uuid = :uuid"),
+                                  query = "select a from AddressEntity a where a.uuid = :uuid"),
               })
-public class Address implements Serializable {
+public class AddressEntity implements Serializable {
 
     private static final long serialVersionUID = -3318717135185330458L;
 
@@ -59,23 +59,23 @@ public class Address implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "state_id")
-    private State state;
+    private StateEntity stateEntity;
     @Column(name = "active")
     private Integer active;
-    @ManyToMany(targetEntity = Customer.class, cascade = {
+    @ManyToMany(targetEntity = CustomerEntity.class, cascade = {
             CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH
     })
     @JoinTable(name = "CUSTOMER_ADDRESS",
                joinColumns = @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID"),
                inverseJoinColumns = @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID"))
-    private List<Customer> customers = new ArrayList<>();
+    private List<CustomerEntity> customers = new ArrayList<>();
 
-    public List<Customer> getCustomers() {
+    public List<CustomerEntity> getCustomers() {
         return customers;
     }
 
     public void setCustomers(
-            final List<Customer> customers) {
+            final List<CustomerEntity> customers) {
         this.customers = customers;
     }
 
@@ -127,12 +127,12 @@ public class Address implements Serializable {
         this.pincode = pincode;
     }
 
-    public State getState() {
-        return state;
+    public StateEntity getState() {
+        return stateEntity;
     }
 
-    public void setState(final State state) {
-        this.state = state;
+    public void setState(final StateEntity stateEntity) {
+        this.stateEntity = stateEntity;
     }
 
     public Integer getActive() {
@@ -148,41 +148,41 @@ public class Address implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Address)) {
+        if (!(o instanceof AddressEntity)) {
             return false;
         }
 
-        final Address address = (Address) o;
+        final AddressEntity addressEntity = (AddressEntity) o;
 
-        if (getId() != null ? !getId().equals(address.getId()) : address.getId() != null) {
+        if (getId() != null ? !getId().equals(addressEntity.getId()) : addressEntity.getId() != null) {
             return false;
         }
-        if (getUuid() != null ? !getUuid().equals(address.getUuid()) : address.getUuid() != null) {
+        if (getUuid() != null ? !getUuid().equals(addressEntity.getUuid()) : addressEntity.getUuid() != null) {
             return false;
         }
-        if (getFlatBuilNumber() != null ? !getFlatBuilNumber().equals(address.getFlatBuilNumber()) :
-            address
+        if (getFlatBuilNumber() != null ? !getFlatBuilNumber().equals(addressEntity.getFlatBuilNumber()) :
+            addressEntity
                     .getFlatBuilNumber()
             != null) {
             return false;
         }
-        if (getLocality() != null ? !getLocality().equals(address.getLocality())
-                                  : address.getLocality() != null) {
+        if (getLocality() != null ? !getLocality().equals(addressEntity.getLocality())
+                                  : addressEntity.getLocality() != null) {
             return false;
         }
-        if (getCity() != null ? !getCity().equals(address.getCity()) : address.getCity() != null) {
+        if (getCity() != null ? !getCity().equals(addressEntity.getCity()) : addressEntity.getCity() != null) {
             return false;
         }
-        if (getPincode() != null ? !getPincode().equals(address.getPincode())
-                                 : address.getPincode() != null) {
+        if (getPincode() != null ? !getPincode().equals(addressEntity.getPincode())
+                                 : addressEntity.getPincode() != null) {
             return false;
         }
-        if (getState() != null ? !getState().equals(address.getState())
-                               : address.getState() != null) {
+        if (getState() != null ? !getState().equals(addressEntity.getState())
+                               : addressEntity.getState() != null) {
             return false;
         }
-        return getActive() != null ? getActive().equals(address.getActive())
-                                   : address.getActive() == null;
+        return getActive() != null ? getActive().equals(addressEntity.getActive())
+                                   : addressEntity.getActive() == null;
     }
 
     @Override
@@ -207,7 +207,7 @@ public class Address implements Serializable {
                ", locality='" + locality + '\'' +
                ", city='" + city + '\'' +
                ", pincode='" + pincode + '\'' +
-               ", state=" + state +
+               ", state=" + stateEntity +
                ", active=" + active +
                '}';
     }
