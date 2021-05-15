@@ -1,35 +1,37 @@
 package com.upgrad.FoodOrderingApp.service.dao;
 
-import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
+import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
+import com.upgrad.FoodOrderingApp.service.entity.PaymentEntity;
+import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
+import java.util.List;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 @Repository
-public class ItemDao {
-
+public class PaymentDao {
+    
     @PersistenceContext
     private EntityManager entityManager;
-
-    public ItemEntity getItemById(final Integer id) {
+    
+    public List<PaymentEntity> getAllPaymentMethods() {
         try {
-            return entityManager.createNamedQuery("getItemById", ItemEntity.class)
-                                .setParameter("id", id)
-                                .getSingleResult();
+            return entityManager.createQuery("select p from PaymentEntity p").getResultList();
         } catch (final NoResultException nre) {
             return null;
         }
     }
     
-    public ItemEntity getItemByUuid(final String uuid) {
+    public PaymentEntity getPaymentByUuid(String uuid) {
         try {
-            return entityManager.createNamedQuery("getItemByUuid", ItemEntity.class)
+            return entityManager.createNamedQuery("paymentByUuid", PaymentEntity.class)
                        .setParameter("uuid", uuid)
                        .getSingleResult();
         } catch (final NoResultException nre) {
             return null;
         }
     }
+    
+    
 }

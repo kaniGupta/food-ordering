@@ -9,10 +9,12 @@ import com.upgrad.FoodOrderingApp.service.dao.RestaurantCategoryDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
 import com.upgrad.FoodOrderingApp.service.dao.StateDao;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
-import com.upgrad.FoodOrderingApp.service.entity.Category;
-import com.upgrad.FoodOrderingApp.service.entity.Restaurant;
+import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
+import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantCategory;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
+import java.math.BigDecimal;
+import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,20 +47,20 @@ public class RestaurantService {
         this.addressDao = addressDao;
     }
 
-    public List<Restaurant> getRestaurants() {
+    public List<RestaurantEntity> getRestaurants() {
         log.debug("Fetch Restaurants.");
         return restaurantDao.getAllRestaurants();
     }
 
-    public String getRestaurantCategories(final Restaurant restaurant) {
+    public String getRestaurantCategories(final RestaurantEntity restaurantEntity) {
         final List<RestaurantCategory> categories =
-                restaurantCategoryDao.getRestaurantCategoriesByRestaurantId(restaurant.getId());
+                restaurantCategoryDao.getRestaurantCategoriesByRestaurantId(restaurantEntity.getId());
         final List<String> categoryList = new ArrayList<>();
         if (null != categories && !categories.isEmpty()) {
             categories.forEach(cat -> {
-                final Category category = categoryDao.getCategoryById(cat.getId());
-                if (null != category) {
-                    categoryList.add(category.getCategoryName());
+                final CategoryEntity categoryEntity = categoryDao.getCategoryById(cat.getId());
+                if (null != categoryEntity) {
+                    categoryList.add(categoryEntity.getCategoryName());
                 }
             });
         }
@@ -69,49 +71,33 @@ public class RestaurantService {
         return addressDao.getAddressById(id);
     }
 
-    public RestaurantDetailsResponse getRestaurantByName(final String restaurantName) {
-        log.debug("Fetch Restaurant By Name.");
-        final Restaurant restaurant = restaurantDao.getRestaurantByName(restaurantName);
-        return getRestaurantDetailsResponse(restaurant);
+    public List<RestaurantEntity> restaurantsByName(final String restaurantName) {
+        final List<RestaurantEntity> restaurantEntities = restaurantDao.getRestaurantByName(restaurantName);
+        return restaurantEntities;
     }
 
-    public RestaurantDetailsResponse getRestaurantByUuid(final String uuid) {
-        log.debug("Fetch Restaurant By Uuid.");
-        final Restaurant restaurant = restaurantDao.getRestaurantByUuid(uuid);
-        return getRestaurantDetailsResponse(restaurant);
+    public RestaurantEntity restaurantByUUID(final String uuid) {
+        final RestaurantEntity restaurantEntity = restaurantDao.getRestaurantByUUID(uuid);
+        return restaurantEntity;
     }
-
-    private RestaurantDetailsResponse getRestaurantDetailsResponse(final Restaurant restaurant) {
-        final RestaurantDetailsResponse response = new RestaurantDetailsResponse();
-        if (null != restaurant) {
-            final AddressEntity addressEntity = restaurant.getAddress();
-            if (null != addressEntity && null != addressEntity.getId()) {
-                final Integer id = restaurant.getAddress().getId();
-                final StateEntity stateEntity = stateDao.getStateById(id);
-
-                final RestaurantDetailsResponseAddress responseAddress = new RestaurantDetailsResponseAddress();
-                final RestaurantDetailsResponseAddressState responseState =
-                        new RestaurantDetailsResponseAddressState();
-
-                responseState.setId(UUID.fromString(stateEntity.getUuid()));
-                responseState.setStateName(stateEntity.getStateName());
-
-                responseAddress.setId(UUID.fromString(addressEntity.getUuid()));
-                responseAddress.setFlatBuildingName(addressEntity.getFlatBuilNumber());
-                responseAddress.setLocality(addressEntity.getLocality());
-                responseAddress.setCity(addressEntity.getCity());
-                responseAddress.setPincode(addressEntity.getPincode());
-                responseAddress.setState(responseState);
-
-                response.setAddress(responseAddress);
-            }
-            response.setId(restaurant.getUuid());
-            response.setRestaurantName(restaurant.getRestaurantName());
-            response.setPhotoURL(restaurant.getPhotoUrl());
-            response.setCustomerRating(restaurant.getCustomerRating());
-            response.setAveragePrice(restaurant.getAveragePriceForTwo());
-            response.setNumberCustomersRated(restaurant.getNumberOfCustomersRated());
-        }
-        return response;
+    
+    public List<RestaurantEntity> restaurantByCategory(String categoryId) {
+        return Collections.emptyList();
     }
+    
+    public List<RestaurantEntity> restaurantsByRating() {
+        return Collections.emptyList();
+    }
+    
+    public RestaurantEntity updateRestaurantRating(RestaurantEntity restaurantEntity,double rating) {
+        int numberOfCustomers = restaurantEntity.getNumberOfCustomersRated();
+        double currentRating = restaurantEntity.getCustomerRating()*numberOfCustomers + rating;
+        double newRating = (currentRating/(double)(numberOfCustomers+1));
+        restaurantEntity.setCustomerRating(newRating);
+        restaurantEntity.setNumberOfCustomersRated(numberOfCustomers+1);
+        restaurantDao.updateRestaurant(restaurantEntity);
+        return restaurantEntity;
+    }
+    
+    
 }

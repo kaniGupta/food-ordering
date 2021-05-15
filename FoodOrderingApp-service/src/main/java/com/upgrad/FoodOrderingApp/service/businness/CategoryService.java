@@ -2,8 +2,10 @@ package com.upgrad.FoodOrderingApp.service.businness;
 
 import com.upgrad.FoodOrderingApp.service.dao.CategoryDao;
 import com.upgrad.FoodOrderingApp.service.dao.CategoryItemDao;
-import com.upgrad.FoodOrderingApp.service.entity.Category;
+import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CategoryItem;
+import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +29,21 @@ public class CategoryService {
         this.categoryItemDao = categoryItemDao;
     }
 
-    public List<Category> getCategories() {
-        log.info("Get all categories");
+    public List<CategoryEntity> getAllCategoriesOrderedByName() {
         return categoryDao.getAllCategories();
     }
 
-    public Category getCategoryById(final String categoryId) {
+    public CategoryEntity getCategoryById(final String categoryId)
+        throws CategoryNotFoundException {
         log.info("Get category by UUID : {}", categoryId);
-        return categoryDao.getCategoryByUuid(categoryId);
+        if(categoryId == null || StringUtils.isEmpty(categoryId)) {
+            throw new CategoryNotFoundException("CNF-001","Category id field should not be empty");
+        }
+        final CategoryEntity categoryEntity = categoryDao.getCategoryByUuid(categoryId);
+        if(categoryEntity == null) {
+            throw new CategoryNotFoundException("CNF-002","No category by this id");
+        }
+        return categoryEntity;
     }
 
     public List<Integer> getItemIdsFromCategoryItem(final Integer id) {
@@ -42,6 +51,10 @@ public class CategoryService {
         if (null != list && !list.isEmpty()) {
             return list.stream().map(CategoryItem::getItemId).collect(Collectors.toList());
         }
+        return Collections.emptyList();
+    }
+    
+    public List<CategoryEntity> getCategoriesByRestaurant(final String restaurantId) {
         return Collections.emptyList();
     }
 }

@@ -1,10 +1,13 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -12,6 +15,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "coupon")
+@NamedQueries({
+    @NamedQuery(name = "couponByUuid", query = "select c from Coupon c where c.uuid = :uuid"),
+    @NamedQuery(name = "couponByName", query = "select c from Coupon c where c.couponName = :couponName")
+})
 public class Coupon implements Serializable {
 
     private static final long serialVersionUID = -5138057655759304278L;
@@ -28,7 +35,7 @@ public class Coupon implements Serializable {
 
     @Column(name = "coupon_name")
     @Size(max = 255)
-    private String restaurantName;
+    private String couponName;
 
     @Column(name = "percent")
     private Integer percent;
@@ -36,7 +43,15 @@ public class Coupon implements Serializable {
     public Integer getId() {
         return id;
     }
-
+    
+    public String getCouponName() {
+        return couponName;
+    }
+    
+    public void setCouponName(String couponName) {
+        this.couponName = couponName;
+    }
+    
     public void setId(final Integer id) {
         this.id = id;
     }
@@ -49,14 +64,6 @@ public class Coupon implements Serializable {
         this.uuid = uuid;
     }
 
-    public String getRestaurantName() {
-        return restaurantName;
-    }
-
-    public void setRestaurantName(final String restaurantName) {
-        this.restaurantName = restaurantName;
-    }
-
     public Integer getPercent() {
         return percent;
     }
@@ -64,37 +71,23 @@ public class Coupon implements Serializable {
     public void setPercent(final Integer percent) {
         this.percent = percent;
     }
-
+    
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
         if (!(o instanceof Coupon)) {
             return false;
         }
-
-        final Coupon coupon = (Coupon) o;
-
-        if (getId() != null ? !getId().equals(coupon.getId()) : coupon.getId() != null) {
-            return false;
-        }
-        if (getUuid() != null ? !getUuid().equals(coupon.getUuid()) : coupon.getUuid() != null) {
-            return false;
-        }
-        if (getRestaurantName() != null ? !getRestaurantName().equals(coupon.getRestaurantName()) :
-            coupon.getRestaurantName() != null) {
-            return false;
-        }
-        return getPercent() != null ? getPercent().equals(coupon.getPercent()) : coupon.getPercent() == null;
+        Coupon coupon = (Coupon) o;
+        return id.equals(coupon.id) && uuid.equals(coupon.uuid) && couponName
+                                                                       .equals(coupon.couponName)
+                   && percent.equals(coupon.percent);
     }
-
+    
     @Override
     public int hashCode() {
-        int result = getId() != null ? getId().hashCode() : 0;
-        result = 31 * result + (getUuid() != null ? getUuid().hashCode() : 0);
-        result = 31 * result + (getRestaurantName() != null ? getRestaurantName().hashCode() : 0);
-        result = 31 * result + (getPercent() != null ? getPercent().hashCode() : 0);
-        return result;
+        return Objects.hash(id, uuid, couponName, percent);
     }
 }

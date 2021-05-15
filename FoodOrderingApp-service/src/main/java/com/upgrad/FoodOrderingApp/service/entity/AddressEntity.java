@@ -40,11 +40,24 @@ public class AddressEntity implements Serializable {
     @NotNull
     @Size(max = 200)
     private String uuid;
-
+    
+    public AddressEntity() {
+    }
+    
     @Column(name = "flat_buil_number")
     @Size(max = 255)
     private String flatBuilNumber;
-
+    
+    public AddressEntity(String uuid, String flatBuilNumber, String locality, String city,
+        String pincode, StateEntity stateEntity) {
+        this.uuid = uuid;
+        this.flatBuilNumber = flatBuilNumber;
+        this.locality = locality;
+        this.city = city;
+        this.pincode = pincode;
+        this.stateEntity = stateEntity;
+    }
+    
     @Column(name = "locality")
     @Size(max = 255)
     private String locality;
@@ -60,6 +73,7 @@ public class AddressEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "state_id")
     private StateEntity stateEntity;
+    
     @Column(name = "active")
     private Integer active;
     @ManyToMany(targetEntity = CustomerEntity.class, cascade = {

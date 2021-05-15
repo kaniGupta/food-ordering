@@ -6,8 +6,10 @@ import com.upgrad.FoodOrderingApp.api.model.CategoryListResponse;
 import com.upgrad.FoodOrderingApp.api.model.ItemList;
 import com.upgrad.FoodOrderingApp.service.businness.CategoryService;
 import com.upgrad.FoodOrderingApp.service.businness.ItemService;
-import com.upgrad.FoodOrderingApp.service.entity.Category;
-import com.upgrad.FoodOrderingApp.service.entity.Item;
+import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
+import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
+import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,37 +43,35 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<CategoryListResponse>> getCategories() {
-        log.info("Get all categories");
         final List<CategoryListResponse> responseList = new ArrayList<>();
-        final List<Category> categories = categoryService.getCategories();
+        final List<CategoryEntity> categories = categoryService.getAllCategoriesOrderedByName();
 
         if (null != categories && !categories.isEmpty()) {
             categories.forEach(category -> {
                 responseList.add(categoryMapper.mapCategoryToCategoryDetailsResponse(category));
             });
-            log.info("Total number of categories {}", categories.size());
         }
         return ResponseEntity.ok(responseList);
     }
 
     @GetMapping("/{category_id}")
     public ResponseEntity<CategoryDetailsResponse> getCategoryById(
-            @PathVariable("category_id") final String categoryId) {
-        log.info("Get category by UUID : {}", categoryId);
+            @PathVariable("category_id") final String categoryId) throws CategoryNotFoundException {
+        
         final CategoryDetailsResponse response = new CategoryDetailsResponse();
-        final Category category = categoryService.getCategoryById(categoryId);
-        final List<Integer> itemIds = categoryService.getItemIdsFromCategoryItem(category.getId());
+        final CategoryEntity categoryEntity = categoryService.getCategoryById(categoryId);
+        final List<Integer> itemIds = categoryService.getItemIdsFromCategoryItem(categoryEntity.getId());
         if (null != itemIds && !itemIds.isEmpty()) {
             itemIds.forEach(id -> {
-                final Item item = itemService.getItemById(id);
-                if (null != item) {
+                final ItemEntity itemEntity = itemService.getItemById(id);
+                if (null != itemEntity) {
                     final ItemList itemList = new ItemList();
-                    itemList.setId(UUID.fromString(item.getUuid()));
-                    itemList.setItemName(item.getItemName());
-                    itemList.setPrice(item.getPrice());
+                    itemList.setId(UUID.fromString(itemEntity.getUuid()));
+                    itemList.setItemName(itemEntity.getItemName());
+                    itemList.setPrice(itemEntity.getPrice());
 
-                    if (null != item.getType()) {
-                        if ("1".equals(item.getType())) {
+                    if (null != itemEntity.getType()) {
+                        if ("1".equals(itemEntity.getType())) {
                             itemList.setItemType(ItemList.ItemTypeEnum.NON_VEG);
                         } else {
                             itemList.setItemType(ItemList.ItemTypeEnum.VEG);
@@ -82,8 +82,8 @@ public class CategoryController {
             });
         }
 
-        response.setId(UUID.fromString(category.getUuid()));
-        response.setCategoryName(category.getCategoryName());
+        response.setId(UUID.fromString(categoryEntity.getUuid()));
+        response.setCategoryName(categoryEntity.getCategoryName());
         return ResponseEntity.ok(response);
     }
 }

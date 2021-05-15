@@ -1,12 +1,17 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -16,9 +21,11 @@ import java.io.Serializable;
 @Table(name = "item")
 @NamedQueries({
                       @NamedQuery(name = "getItemById",
-                                  query = "select i from Item i where i.id =:id")
+                                  query = "select i from ItemEntity i where i.id =:id"),
+    @NamedQuery(name = "getItemByUuid",
+        query = "select i from ItemEntity i where i.uuid =:uuid")
               })
-public class Item implements Serializable {
+public class ItemEntity implements Serializable {
 
     private static final long serialVersionUID = -7657675664048211124L;
 
@@ -42,7 +49,25 @@ public class Item implements Serializable {
     @Column(name = "type")
     @Size(max = 10)
     private String type;
-
+    
+    @ManyToMany(targetEntity = CategoryEntity.class,mappedBy = "items",cascade =  {
+        CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH
+    })
+    private List<CategoryEntity> categories = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "item")
+    private List<OrderItem> orderItems = new ArrayList<>();
+    
+    public List<CategoryEntity> getCategories() {
+        return categories;
+    }
+    
+    
+    public void setCategories(
+        List<CategoryEntity> categories) {
+        this.categories = categories;
+    }
+    
     public Integer getId() {
         return id;
     }
@@ -88,25 +113,25 @@ public class Item implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Item)) {
+        if (!(o instanceof ItemEntity)) {
             return false;
         }
 
-        final Item item = (Item) o;
+        final ItemEntity itemEntity = (ItemEntity) o;
 
-        if (getId() != null ? !getId().equals(item.getId()) : item.getId() != null) {
+        if (getId() != null ? !getId().equals(itemEntity.getId()) : itemEntity.getId() != null) {
             return false;
         }
-        if (getUuid() != null ? !getUuid().equals(item.getUuid()) : item.getUuid() != null) {
+        if (getUuid() != null ? !getUuid().equals(itemEntity.getUuid()) : itemEntity.getUuid() != null) {
             return false;
         }
-        if (getItemName() != null ? !getItemName().equals(item.getItemName()) : item.getItemName() != null) {
+        if (getItemName() != null ? !getItemName().equals(itemEntity.getItemName()) : itemEntity.getItemName() != null) {
             return false;
         }
-        if (getPrice() != null ? !getPrice().equals(item.getPrice()) : item.getPrice() != null) {
+        if (getPrice() != null ? !getPrice().equals(itemEntity.getPrice()) : itemEntity.getPrice() != null) {
             return false;
         }
-        return getType() != null ? getType().equals(item.getType()) : item.getType() == null;
+        return getType() != null ? getType().equals(itemEntity.getType()) : itemEntity.getType() == null;
     }
 
     @Override
