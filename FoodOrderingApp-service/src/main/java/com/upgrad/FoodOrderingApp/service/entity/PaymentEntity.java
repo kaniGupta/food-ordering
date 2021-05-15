@@ -7,12 +7,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "payment")
+@NamedQueries(
+    @NamedQuery(name = "paymentByUuid", query = "select p from PaymentEntity p where p.uuid = :uuid")
+)
 public class PaymentEntity implements Serializable {
     
     @Override

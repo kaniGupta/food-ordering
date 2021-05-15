@@ -1,11 +1,16 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
@@ -18,13 +23,13 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "restaurant")
 @NamedQueries({
-                      @NamedQuery(name = "allRestaurants", query = "select r from Restaurant r"),
+                      @NamedQuery(name = "allRestaurants", query = "select r from RestaurantEntity r"),
                       @NamedQuery(name = "getRestaurantsByName",
-                                  query = "select r from Restaurant r where r.restaurantName =:restaurantName"),
+                                  query = "select r from RestaurantEntity r where r.restaurantName like :restaurantName"),
                       @NamedQuery(name = "getRestaurantsByUuid",
-                                  query = "select r from Restaurant r where r.uuid =:uuid")
+                                  query = "select r from RestaurantEntity r where r.uuid =:uuid")
               })
-public class Restaurant implements Serializable {
+public class RestaurantEntity implements Serializable {
     private static final long serialVersionUID = 7449929436134115185L;
 
     @Id
@@ -46,20 +51,36 @@ public class Restaurant implements Serializable {
     private String photoUrl;
 
     @Column(name = "customer_rating")
-    @Size(max = 50)
-    private BigDecimal customerRating;
+    private Double customerRating;
 
     @Column(name = "average_price_for_two")
-    @Size(max = 50)
     private Integer averagePriceForTwo;
 
     @Column(name = "number_of_customers_rated")
-    @Size(max = 50)
     private Integer numberOfCustomersRated;
-
+    
+    public List<CategoryEntity> getCategories() {
+        return categories;
+    }
+    
+    public void setCategories(
+        List<CategoryEntity> categories) {
+        this.categories = categories;
+    }
+    
     @OneToOne
     @JoinColumn(name = "address_id")
     private AddressEntity addressEntity;
+    
+    
+    @ManyToMany(targetEntity = CategoryEntity.class, cascade = {
+        CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH
+    })
+    @JoinTable(name = "RESTAURANT_CATEGORY",
+        joinColumns = @JoinColumn(name = "RESTAURANT_ID", referencedColumnName = "ID"),
+        inverseJoinColumns = @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "ID"))
+    private List<CategoryEntity> categories = new ArrayList<>();
+    
 
     public Integer getId() {
         return id;
@@ -93,11 +114,11 @@ public class Restaurant implements Serializable {
         this.photoUrl = photoUrl;
     }
 
-    public BigDecimal getCustomerRating() {
+    public Double getCustomerRating() {
         return customerRating;
     }
 
-    public void setCustomerRating(final BigDecimal customerRating) {
+    public void setCustomerRating(final double customerRating) {
         this.customerRating = customerRating;
     }
 
@@ -130,11 +151,11 @@ public class Restaurant implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Restaurant)) {
+        if (!(o instanceof RestaurantEntity)) {
             return false;
         }
 
-        final Restaurant that = (Restaurant) o;
+        final RestaurantEntity that = (RestaurantEntity) o;
 
         if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) {
             return false;

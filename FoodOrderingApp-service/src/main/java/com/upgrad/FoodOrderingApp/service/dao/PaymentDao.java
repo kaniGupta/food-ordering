@@ -1,5 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.dao;
 
+import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.PaymentEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import java.util.List;
@@ -21,5 +22,16 @@ public class PaymentDao {
             return null;
         }
     }
+    
+    public PaymentEntity getPaymentByUuid(String uuid) {
+        try {
+            return entityManager.createNamedQuery("paymentByUuid", PaymentEntity.class)
+                       .setParameter("uuid", uuid)
+                       .getSingleResult();
+        } catch (final NoResultException nre) {
+            return null;
+        }
+    }
+    
     
 }
