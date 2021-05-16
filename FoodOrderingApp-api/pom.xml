@@ -117,7 +117,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>restaurantEntity</id>
+                        <id>restaurant</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -137,7 +137,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>addressEntity</id>
+                        <id>address</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -147,17 +147,17 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>categoryEntity</id>
+                        <id>category</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/endpoints/categoryEntity.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/endpoints/category.json</inputSpec>
                             <language>spring</language>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>itemEntity</id>
+                        <id>item</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
